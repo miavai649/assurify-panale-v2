@@ -3,10 +3,61 @@ import CardDataStats from '../components/CardDataStats';
 import ChartOne from '../components/Charts/ChartOne';
 import ChartTwo from '../components/Charts/ChartTwo';
 import ChartThree from '../components/Charts/ChartThree';
-import TableOne from '../components/Tables/TableOne';
 import ChatCard from '../components/Chat/ChatCard';
+import CustomTable from '../components/Tables/CustomTable';
+import { Button, TableColumnsType } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 const Dashboard: React.FC = () => {
+  interface DataType {
+    key: number;
+    name: string;
+    age: number;
+    address: string;
+    description: string;
+  }
+
+  const columns: TableColumnsType<DataType> = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      sorter: (a, b) => a.age - b.age,
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      filters: [
+        {
+          text: 'London',
+          value: 'London',
+        },
+        {
+          text: 'New York',
+          value: 'New York',
+        },
+      ],
+      onFilter: (value, record) =>
+        record.address.indexOf(value as string) === 0,
+    },
+    {
+      title: 'View',
+      key: 'view',
+      render: () => <Button shape="circle" icon={<SearchOutlined />} />,
+    },
+  ];
+
+  const data = Array.from({ length: 20 }).map<DataType>((_, i) => ({
+    key: i,
+    name: 'John Brown',
+    age: Number(`${i}2`),
+    address: `New York No. ${i} Lake Park`,
+    description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
+  }));
+
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
@@ -105,13 +156,21 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <ChartOne />
-        <ChartTwo />
-        <ChartThree />
-        <div className="col-span-12 xl:col-span-8">
-          <TableOne />
+        <div className="col-span-12 xl:col-span-6">
+          <CustomTable
+            columns={columns}
+            tableSize="large"
+            data={data}
+            tableTitle={
+              <div className="p-3">
+                <p className="font-semibold text-base">Recent Sales</p>
+              </div>
+            }
+          />
         </div>
-        <ChatCard />
+        <div className="col-span-12 xl:col-span-6">
+          <ChartOne />
+        </div>
       </div>
     </>
   );
