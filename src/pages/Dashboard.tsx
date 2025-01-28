@@ -1,12 +1,11 @@
 import React from 'react';
 import CardDataStats from '../components/CardDataStats';
 import ChartOne from '../components/Charts/ChartOne';
-import ChartTwo from '../components/Charts/ChartTwo';
-import ChartThree from '../components/Charts/ChartThree';
-import ChatCard from '../components/Chat/ChatCard';
 import CustomTable from '../components/Tables/CustomTable';
 import { Button, TableColumnsType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import TableOne from '../components/Tables/TableOne';
+import TableTwo from '../components/Tables/TableTwo';
 
 const Dashboard: React.FC = () => {
   interface DataType {
@@ -157,7 +156,7 @@ const Dashboard: React.FC = () => {
 
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <div className="col-span-12 xl:col-span-6">
-          <CustomTable
+          {/* <CustomTable
             columns={columns}
             tableSize="large"
             data={data}
@@ -166,7 +165,8 @@ const Dashboard: React.FC = () => {
                 <p className="font-semibold text-base">Recent Sales</p>
               </div>
             }
-          />
+          /> */}
+          <TableTwo />
         </div>
         <div className="col-span-12 xl:col-span-6">
           <ChartOne />

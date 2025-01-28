@@ -16,6 +16,7 @@ import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import Dashboard from './pages/Dashboard';
+import { InstallationRequest } from './pages/InstallationRequest';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,11 +45,11 @@ function App() {
           }
         />
         <Route
-          path="/calendar"
+          path="/installation-request"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Calendar />
+              <PageTitle title="Installation Request | Assurify Installation Request" />
+              <InstallationRequest />
             </>
           }
         />
