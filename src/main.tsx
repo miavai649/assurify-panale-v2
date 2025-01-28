@@ -6,11 +6,14 @@ import './css/style.css';
 import './css/satoshi.css';
 import 'jsvectormap/dist/css/jsvectormap.css';
 import 'flatpickr/dist/flatpickr.min.css';
+import { ColorModeProvider } from './context/ColorModeContext';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
-      <App />
+      <ColorModeProvider>
+        <App />
+      </ColorModeProvider>
     </Router>
   </React.StrictMode>,
 );

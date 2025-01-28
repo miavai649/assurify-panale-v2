@@ -5,7 +5,7 @@ import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
-import Calendar from './pages/Calendar';
+
 import Chart from './pages/Chart';
 import FormElements from './pages/Form/FormElements';
 import FormLayout from './pages/Form/FormLayout';
@@ -17,6 +17,7 @@ import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
 import Dashboard from './pages/Dashboard';
 import { InstallationRequest } from './pages/InstallationRequest';
+import Calendar from './pages/Calendar';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,11 +55,11 @@ function App() {
           }
         />
         <Route
-          path="/profile"
+          path="/calender"
           element={
             <>
               <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <Profile />
+              <Calendar />
             </>
           }
         />

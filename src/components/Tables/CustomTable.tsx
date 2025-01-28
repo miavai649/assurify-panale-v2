@@ -1,7 +1,6 @@
 import { ConfigProvider, Table, TableColumnsType } from 'antd';
 import { ReactNode } from 'react';
-import useColorMode from '../../hooks/useColorMode';
-import useLocalStorage from '../../hooks/useLocalStorage';
+import { useColorModeContext } from '../../context/ColorModeContext';
 
 interface CustomTableProps<T> {
   columns: TableColumnsType<T>;
@@ -16,14 +15,16 @@ const CustomTable = <T extends object>({
   tableTitle,
   tableSize,
 }: CustomTableProps<T>) => {
-  const [colorMode, setColorMode] = useLocalStorage('color-theme', 'light');
+  const { state } = useColorModeContext();
+  const { colorMode } = state;
   console.log('🚀 ~ colorMode:', colorMode);
+
   return (
     <ConfigProvider
       theme={{
         token: {
           colorPrimary: '#56A7DC',
-          colorBgContainer: '#fff',
+          colorBgContainer: colorMode === 'light' ? '#fff' : '#24303F',
           colorText: 'var(--tw-text-black)',
           borderRadius: 6,
         },

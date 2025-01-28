@@ -1,7 +1,10 @@
+import { useColorModeContext } from '../../context/ColorModeContext';
 import useColorMode from '../../hooks/useColorMode';
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
+
+  const { setColorModes } = useColorModeContext();
 
   return (
     <li>
@@ -15,6 +18,7 @@ const DarkModeSwitcher = () => {
           onChange={() => {
             if (typeof setColorMode === 'function') {
               setColorMode(colorMode === 'light' ? 'dark' : 'light');
+              setColorModes(colorMode === 'light' ? 'dark' : 'light');
             }
           }}
           className="dur absolute top-0 z-50 m-0 h-full w-full cursor-pointer opacity-0"
