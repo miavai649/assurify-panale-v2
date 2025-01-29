@@ -1,5 +1,5 @@
 import { Button, TableColumnsType, Tag } from 'antd';
-import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -7,8 +7,9 @@ import {
   EyeOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
-import CustomTable from '../components/Tables/CustomTable';
+import CustomTable from '../../components/Tables/CustomTable';
 import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 export const InstallationRequest = () => {
   const [supports, setSupports] = useState([]);
@@ -83,8 +84,13 @@ export const InstallationRequest = () => {
     },
     {
       title: 'View',
+      dataIndex: 'key',
       key: 'view',
-      render: () => <Button shape="circle" icon={<EyeOutlined />} />,
+      render: (key) => (
+        <NavLink to={`/installation-request/view/${key}`}>
+          <Button shape="circle" icon={<EyeOutlined />} />
+        </NavLink>
+      ),
     },
   ];
 
