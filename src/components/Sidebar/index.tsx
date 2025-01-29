@@ -11,6 +11,7 @@ interface SidebarProps {
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
   const { pathname } = location;
+  console.log('🚀 ~ Sidebar ~ pathname:', pathname);
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -107,7 +108,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('/') && 'bg-graydark dark:bg-meta-4'
+                    pathname.length === 1 && 'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <svg
@@ -145,7 +146,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <NavLink
                   to="/installation-request"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('profile') && 'bg-graydark dark:bg-meta-4'
+                    pathname.includes('installation-request') &&
+                    'bg-graydark dark:bg-meta-4'
                   }`}
                 >
                   <svg
