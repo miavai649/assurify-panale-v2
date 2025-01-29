@@ -1,6 +1,12 @@
-import { Button, TableColumnsType } from 'antd';
+import { Button, TableColumnsType, Tag } from 'antd';
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import { EyeOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+  EyeOutlined,
+  SyncOutlined,
+} from '@ant-design/icons';
 import CustomTable from '../components/Tables/CustomTable';
 import { useEffect, useState } from 'react';
 
@@ -20,6 +26,29 @@ export const InstallationRequest = () => {
     {
       title: 'Status',
       dataIndex: 'status',
+      render: (status: string) => {
+        return (
+          <>
+            {status === 'pending' ? (
+              <Tag icon={<ClockCircleOutlined />} color="default">
+                Pending
+              </Tag>
+            ) : status === 'in_progress' ? (
+              <Tag icon={<SyncOutlined spin />} color="processing">
+                In Progress
+              </Tag>
+            ) : status === 'resolved' ? (
+              <Tag icon={<CheckCircleOutlined />} color="success">
+                Resolved
+              </Tag>
+            ) : (
+              <Tag icon={<CloseCircleOutlined />} color="error">
+                Cancelled
+              </Tag>
+            )}
+          </>
+        );
+      },
       filters: [
         {
           text: 'Pending',
@@ -27,7 +56,7 @@ export const InstallationRequest = () => {
         },
         {
           text: 'In Progress',
-          value: 'in progress',
+          value: 'in_progress',
         },
         {
           text: 'Resolved',
@@ -39,8 +68,7 @@ export const InstallationRequest = () => {
         },
       ],
       onFilter: (value, record) => {
-        console.log(value, record);
-        return record.address.indexOf(value as string) === 0;
+        return record.status === value;
       },
     },
     {
@@ -75,6 +103,7 @@ export const InstallationRequest = () => {
 
   const data = supports?.map((support: any) => {
     return {
+      key: support?.id,
       shop: support?.store?.url,
       service: support?.initiatedFor,
       status: support?.status,

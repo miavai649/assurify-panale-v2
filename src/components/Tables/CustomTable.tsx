@@ -19,7 +19,6 @@ const CustomTable = <T extends object>({
 }: CustomTableProps<T>) => {
   const { state } = useColorModeContext();
   const { colorMode } = state;
-  console.log('🚀 ~ colorMode:', colorMode);
 
   return (
     <ConfigProvider
