@@ -7,12 +7,14 @@ import './css/satoshi.css';
 import 'jsvectormap/dist/css/jsvectormap.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import { ColorModeProvider } from './context/ColorModeContext';
+import { Toaster } from 'react-hot-toast';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
       <ColorModeProvider>
         <App />
+        <Toaster position="top-center" reverseOrder={false} />
       </ColorModeProvider>
     </Router>
   </React.StrictMode>,

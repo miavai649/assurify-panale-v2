@@ -117,7 +117,9 @@ span.flatpickr-weekday,
 }
 .flatpickr-day.inRange {
   @apply dark:!shadow-7;
-  box-shadow: -5px 0 0 #EFF4FB, 5px 0 0 #EFF4FB;
+  box-shadow:
+    -5px 0 0 #eff4fb,
+    5px 0 0 #eff4fb;
 }
 .flatpickr-day.inRange,
 .flatpickr-day.prevMonthDay.inRange,
@@ -212,4 +214,32 @@ span.flatpickr-weekday,
 
 [x-cloak] {
   display: none !important;
+}
+
+.ql-editor::before {
+  color: #808080;
+}
+
+.dark .ql-editor::before {
+  color: #b3b3b3 !important;
+}
+
+.dark .ql-toolbar {
+  background: #1a222c !important;
+  border-color: #444 !important;
+}
+
+.dark .ql-container {
+  background: #24303f !important;
+  color: white !important;
+  border-color: #444 !important;
+  font-size: 16px !important;
+}
+
+.dark .ql-editor {
+  color: white !important;
+}
+
+.dark .ql-picker {
+  color: white !important;
 }

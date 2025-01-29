@@ -1,4 +1,4 @@
-import { Tag, Card, Spin } from 'antd';
+import { Tag, Card, Spin, Flex, Button, Select, Typography } from 'antd';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -7,6 +7,12 @@ import {
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { useColorModeContext } from '../../context/ColorModeContext';
+import SelectBox from '../../components/SelectBox';
+
+const { Title, Text } = Typography;
 
 interface SupportData {
   store?: { url: string };
@@ -16,9 +22,44 @@ interface SupportData {
   createdAt?: string;
 }
 
+// options available for the text editor
+const formats = [
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
+];
+
+const modules = {
+  toolbar: {
+    container: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { indent: '-1' },
+        { indent: '+1' },
+      ],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  },
+};
+
 const SingleInstallationRequest = () => {
   const [support, setSupport] = useState<SupportData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [value, setValue] = useState('');
+  const { state } = useColorModeContext();
+  const { colorMode } = state;
 
   const { id } = useParams();
 
@@ -32,6 +73,7 @@ const SingleInstallationRequest = () => {
       .then((data) => {
         setSupport(data);
         setLoading(false);
+        setValue(data?.reportContent || null);
       })
       .catch((err) => {
         console.error('Error fetching data:', err);
@@ -48,9 +90,10 @@ const SingleInstallationRequest = () => {
   }
 
   return (
-    <div className="flex justify-center   p-4">
+    <div className="flex-col items-center   p-4">
+      {/* single installation request details card */}
       <Card
-        className="w-full max-w-2xl p-6 shadow-lg rounded-lg bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700"
+        className="w-full max-w-2xl p-6 shadow-lg rounded-lg bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 mx-auto"
         title={
           <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
             Installation Request
@@ -129,6 +172,8 @@ const SingleInstallationRequest = () => {
           </div>
         </div>
       </Card>
+
+      {/* React quill text editor */}
     </div>
   );
 };
