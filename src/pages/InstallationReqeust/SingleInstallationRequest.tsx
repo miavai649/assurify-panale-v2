@@ -1,4 +1,4 @@
-import { Tag, Card, Spin, Flex, Button, Select, Typography } from 'antd';
+import { Tag, Card, Spin, Flex, Typography } from 'antd';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
@@ -12,7 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useColorModeContext } from '../../context/ColorModeContext';
 import SelectBox from '../../components/SelectBox';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 interface SupportData {
   store?: { url: string };
@@ -174,6 +174,35 @@ const SingleInstallationRequest = () => {
       </Card>
 
       {/* React quill text editor */}
+      <div className="mt-6 max-w-3xl mx-auto">
+        <Title level={4}>Write a Report</Title>
+        <ReactQuill
+          theme="snow"
+          modules={modules}
+          formats={formats}
+          placeholder="Write your report here..."
+          value={value}
+          onChange={setValue}
+          className={`${
+            colorMode === 'dark' ? 'dark-quill' : 'light-quill'
+          } text-gray-800 dark:text-white`}
+        />
+        <Flex justify="space-between" className="mt-4">
+          <SelectBox
+            options={[
+              { value: 'pending', label: 'Pending' },
+              { value: 'in_progress', label: 'In Progress' },
+              { value: 'resolved', label: 'Resolved' },
+              { value: 'cancelled', label: 'Cancelled' },
+            ]}
+            placeholder="Select a status"
+            onChange={(value) => console.log('Selected:', value)}
+          />
+          <button className="px-4 py-2 bg-blue-500 text-white rounded-md">
+            Submit
+          </button>
+        </Flex>
+      </div>
     </div>
   );
 };
