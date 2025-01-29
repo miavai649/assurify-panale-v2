@@ -57,6 +57,7 @@ const modules = {
 const SingleInstallationRequest = () => {
   const [support, setSupport] = useState<SupportData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
   const [value, setValue] = useState('');
   const { state } = useColorModeContext();
   const { colorMode } = state;
@@ -80,6 +81,17 @@ const SingleInstallationRequest = () => {
         setLoading(false);
       });
   }, [id]);
+
+  // submit function for report and status submit
+  const handleSubmit = () => {
+    const formData = new FormData();
+
+    formData.append('reportContent', value);
+    formData.append('status', status);
+
+    console.log(formData.get('reportContent'));
+    console.log(formData.get('status'));
+  };
 
   if (loading) {
     return (
@@ -175,7 +187,9 @@ const SingleInstallationRequest = () => {
 
       {/* React quill text editor */}
       <div className="mt-6 max-w-3xl mx-auto">
-        <Title level={4}>Write a Report</Title>
+        <Title level={4} className="text-black dark:text-white">
+          Write a Report
+        </Title>
         <ReactQuill
           theme="snow"
           modules={modules}
@@ -196,9 +210,12 @@ const SingleInstallationRequest = () => {
               { value: 'cancelled', label: 'Cancelled' },
             ]}
             placeholder="Select a status"
-            onChange={(value) => console.log('Selected:', value)}
+            onChange={(value) => setStatus(value)}
           />
-          <button className="px-4 py-2 bg-blue-500 text-white rounded-md">
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
             Submit
           </button>
         </Flex>
