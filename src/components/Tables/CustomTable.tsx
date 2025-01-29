@@ -5,8 +5,9 @@ import { useColorModeContext } from '../../context/ColorModeContext';
 interface CustomTableProps<T> {
   columns: TableColumnsType<T>;
   data: T[];
-  tableTitle: ReactNode;
+  tableTitle?: ReactNode;
   tableSize: 'small' | 'middle' | 'large';
+  loading?: boolean;
 }
 
 const CustomTable = <T extends object>({
@@ -14,6 +15,7 @@ const CustomTable = <T extends object>({
   data,
   tableTitle,
   tableSize,
+  loading,
 }: CustomTableProps<T>) => {
   const { state } = useColorModeContext();
   const { colorMode } = state;
@@ -34,6 +36,7 @@ const CustomTable = <T extends object>({
         <Table<T>
           bordered
           size={tableSize}
+          loading={loading}
           title={() => (
             <div className="text-title-md font-bold text-black dark:text-white">
               {tableTitle}
