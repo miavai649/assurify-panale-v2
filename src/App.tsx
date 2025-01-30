@@ -17,6 +17,7 @@ import DefaultLayout from './layout/DefaultLayout';
 import Dashboard from './pages/Dashboard';
 import { InstallationRequest } from './pages/InstallationReqeust/InstallationRequest';
 import SingleInstallationRequest from './pages/InstallationReqeust/SingleInstallationRequest';
+import ThemeData from './pages/ThemeData';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,11 +64,11 @@ function App() {
           }
         />
         <Route
-          path="/forms/form-elements"
+          path="/theme-data"
           element={
             <>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <FormElements />
+              <PageTitle title="Theme Data | Assurify Theme Data" />
+              <ThemeData />
             </>
           }
         />

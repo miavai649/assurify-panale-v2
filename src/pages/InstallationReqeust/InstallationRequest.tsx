@@ -1,15 +1,16 @@
-import { Button, TableColumnsType, Tag } from 'antd';
+import { TableColumnsType, Tag } from 'antd';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
-  EyeOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
 import CustomTable from '../../components/Tables/CustomTable';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { Eye } from 'lucide-react';
+import CustomButton from '../../components/CustomButton';
 
 export const InstallationRequest = () => {
   const [supports, setSupports] = useState([]);
@@ -83,12 +84,18 @@ export const InstallationRequest = () => {
         }),
     },
     {
-      title: 'View',
+      title: 'Action',
       dataIndex: 'key',
       key: 'view',
       render: (key) => (
         <NavLink to={`/installation-request/view/${key}`}>
-          <Button shape="circle" icon={<EyeOutlined />} />
+          <CustomButton
+            icon={<Eye className="w-4 h-4" />}
+            aria-label="View"
+            variant="outline"
+            isIconOnly
+            size="sm"
+          />
         </NavLink>
       ),
     },
@@ -97,7 +104,7 @@ export const InstallationRequest = () => {
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/supports/get-all', {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzgwNTU3MzIsImV4cCI6MTczODE0MjEzMn0.JU03JawDsGhYVasJwDywdky3gAhKD7QANvIg2oGsFx0`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzgxNDIzOTIsImV4cCI6MTczODIyODc5Mn0.iMx3p-0JLnmUlgW30tJ8AS8MwzQjigBXYBDnKgm0i9k`,
       },
     })
       .then((res) => res.json())

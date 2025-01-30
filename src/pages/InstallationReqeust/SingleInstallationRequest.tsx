@@ -11,6 +11,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useColorModeContext } from '../../context/ColorModeContext';
 import SelectBox from '../../components/SelectBox';
+import CustomButton from '../../components/CustomButton';
 
 const { Title } = Typography;
 
@@ -67,7 +68,7 @@ const SingleInstallationRequest = () => {
   useEffect(() => {
     fetch(`https://origin.assurify.app/api/admin/supports/view/${id}`, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzgwNTU3MzIsImV4cCI6MTczODE0MjEzMn0.JU03JawDsGhYVasJwDywdky3gAhKD7QANvIg2oGsFx0`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzgxNDIzOTIsImV4cCI6MTczODIyODc5Mn0.iMx3p-0JLnmUlgW30tJ8AS8MwzQjigBXYBDnKgm0i9k`,
       },
     })
       .then((res) => res.json())
@@ -88,9 +89,6 @@ const SingleInstallationRequest = () => {
 
     formData.append('reportContent', value);
     formData.append('status', status);
-
-    console.log(formData.get('reportContent'));
-    console.log(formData.get('status'));
   };
 
   if (loading) {
@@ -107,14 +105,14 @@ const SingleInstallationRequest = () => {
       <Card
         className="w-full max-w-2xl p-6 shadow-lg rounded-lg bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 mx-auto"
         title={
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white">
             Installation Request
           </h2>
         }
       >
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600 dark:text-gray-300">
+            <span className="font-bold text-gray-600 dark:text-gray-300">
               Store:
             </span>
             <a
@@ -128,7 +126,7 @@ const SingleInstallationRequest = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600 dark:text-gray-300">
+            <span className="font-bold text-gray-600 dark:text-gray-300">
               Theme:
             </span>
             <span className="text-gray-800 dark:text-gray-200">
@@ -137,7 +135,7 @@ const SingleInstallationRequest = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600 dark:text-gray-300">
+            <span className="font-bold text-gray-600 dark:text-gray-300">
               Service:
             </span>
             <span className="text-gray-800 dark:text-gray-200">
@@ -146,7 +144,7 @@ const SingleInstallationRequest = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600 dark:text-gray-300">
+            <span className="font-bold text-gray-600 dark:text-gray-300">
               Status:
             </span>
             {support?.status === 'pending' ? (
@@ -169,7 +167,7 @@ const SingleInstallationRequest = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="font-medium text-gray-600 dark:text-gray-300">
+            <span className="font-bold text-gray-600 dark:text-gray-300">
               Date:
             </span>
             <span className="text-gray-800 dark:text-gray-200">
@@ -212,12 +210,7 @@ const SingleInstallationRequest = () => {
             placeholder="Select a status"
             onChange={(value) => setStatus(value)}
           />
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            Submit
-          </button>
+          <CustomButton onClick={handleSubmit}>Submit</CustomButton>
         </Flex>
       </div>
     </div>
