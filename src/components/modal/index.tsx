@@ -1,5 +1,5 @@
 import { Modal } from 'antd';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 import CustomButton from '../CustomButton';
 
 interface ICustomModalProps {
@@ -27,6 +27,7 @@ const CustomModal = ({
       <Modal
         title={modalTitle}
         centered
+        className="bg-black-2"
         open={modalState}
         onCancel={() => setModalState(false)}
         width={modalResponsiveWidth}

@@ -8,6 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   isIconOnly?: boolean;
+  btnType?: 'button' | 'submit' | 'reset';
 }
 
 const CustomButton: React.FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const CustomButton: React.FC<ButtonProps> = ({
   isLoading = false,
   isIconOnly = false,
   className,
+  btnType,
   ...props
 }) => {
   const baseStyles =
@@ -29,7 +31,7 @@ const CustomButton: React.FC<ButtonProps> = ({
     danger:
       'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 dark:active:bg-red-800 focus:ring-red-300',
     outline:
-      'border border-gray-300 text-gray-800 hover:bg-gray-100 active:bg-gray-200 dark:border-gray-500 dark:text-white dark:hover:bg-gray-700 dark:active:bg-gray-600 focus:ring-gray-400',
+      'border border-gray-300 text-gray-800 hover:bg-gray-100 active:bg-gray-200 dark:border-gray-500 dark:text-black dark:hover:text-white dark:hover:bg-gray-700 dark:active:bg-gray-600 focus:ring-gray-400',
   };
 
   const sizeStyles = {
@@ -40,6 +42,7 @@ const CustomButton: React.FC<ButtonProps> = ({
 
   return (
     <button
+      type={btnType}
       className={cn(
         baseStyles,
         variantStyles[variant],
