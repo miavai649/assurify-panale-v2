@@ -6,10 +6,13 @@ import { NavLink } from 'react-router-dom';
 import CustomButton from '../../components/CustomButton';
 import { Eye, Trash } from 'lucide-react';
 import CustomTable from '../../components/Tables/CustomTable';
+import CustomModal from '../../components/modal';
+import { DiamondPlus } from 'lucide-react';
 
 const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [addNewThemeModal, setAddNewThemeModal] = useState(false);
 
   const columns: TableColumnsType<any> = [
     {
@@ -96,12 +99,37 @@ const ThemeData = () => {
     <div>
       <Breadcrumb pageName="Theme Data" />
 
-      <CustomTable
-        columns={columns}
-        tableSize="large"
-        data={data}
-        loading={loading}
+      {/* add new theme data modal */}
+      <CustomModal
+        modalTitle="Add new theme data"
+        modalResponsiveWidth={{
+          xs: '90%',
+          sm: '80%',
+          md: '70%',
+          lg: '60%',
+          xl: '50%',
+          xxl: '40%',
+        }}
+        modalState={addNewThemeModal}
+        setModalState={setAddNewThemeModal}
+        buttonContent={
+          <>
+            <DiamondPlus />
+            Add New Theme
+          </>
+        }
+        modalContent={<p>hello world</p>}
       />
+
+      {/* theme data table */}
+      <div className="mt-5">
+        <CustomTable
+          columns={columns}
+          tableSize="large"
+          data={data}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 };
