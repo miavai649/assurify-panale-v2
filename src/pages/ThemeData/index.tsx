@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { Button, TableColumnsType } from 'antd';
+import { TableColumnsType } from 'antd';
 import { NavLink } from 'react-router-dom';
 
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import CustomButton from '../../components/CustomButton';
+import { Eye, Trash } from 'lucide-react';
+import CustomTable from '../../components/Tables/CustomTable';
 
 const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
@@ -25,18 +27,43 @@ const ThemeData = () => {
     {
       title: 'Data',
       dataIndex: 'data',
+      render: (data: any) => (
+        <span>{JSON.stringify(data).slice(0, 50) + '.....'}</span>
+      ),
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updatedAt',
+      render: (updatedAt: string) =>
+        new Date(updatedAt).toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }),
     },
     {
       title: 'Actions',
       dataIndex: 'key',
       key: 'view',
       render: (key) => (
-        <>
+        <div className="flex gap-3">
           <NavLink to={`/installation-request/view/${key}`}>
-            <Button shape="circle" icon={<EyeOutlined />} />
+            <CustomButton
+              icon={<Eye className="w-4 h-4" />}
+              aria-label="View"
+              variant="primary"
+              isIconOnly
+              size="sm"
+            />
           </NavLink>
-          <Button shape="circle" icon={<DeleteOutlined />} />
-        </>
+          <CustomButton
+            icon={<Trash className="w-4 h-4" />}
+            aria-label="Delete"
+            variant="danger"
+            isIconOnly
+            size="sm"
+          />
+        </div>
       ),
     },
   ];
@@ -50,14 +77,31 @@ const ThemeData = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        // setThemeData(data?.rows);
+        setThemeData(data?.rows);
         setLoading(false);
       });
   }, []);
 
+  const data = themeData?.map((data: any) => {
+    return {
+      key: data?.id,
+      theme: data?.themeName,
+      updatedBy: data?.updatedBy,
+      data: data?.selector,
+      updatedAt: data?.updatedAt,
+    };
+  });
+
   return (
     <div>
       <Breadcrumb pageName="Theme Data" />
+
+      <CustomTable
+        columns={columns}
+        tableSize="large"
+        data={data}
+        loading={loading}
+      />
     </div>
   );
 };

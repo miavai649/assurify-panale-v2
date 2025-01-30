@@ -1,5 +1,5 @@
-import { ConfigProvider, Table, TableColumnsType } from 'antd';
-import { ReactNode } from 'react';
+import { ConfigProvider, PaginationProps, Table, TableColumnsType } from 'antd';
+import { ReactNode, useState } from 'react';
 import { useColorModeContext } from '../../context/ColorModeContext';
 
 interface CustomTableProps<T> {
@@ -19,6 +19,16 @@ const CustomTable = <T extends object>({
 }: CustomTableProps<T>) => {
   const { state } = useColorModeContext();
   const { colorMode } = state;
+
+  const [pageSize, setPageSize] = useState(5);
+
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (
+    current,
+    size,
+  ) => {
+    console.log('Page:', current, 'Size:', size);
+    setPageSize(size);
+  };
 
   return (
     <ConfigProvider
@@ -41,7 +51,13 @@ const CustomTable = <T extends object>({
               {tableTitle}
             </div>
           )}
-          pagination={{ position: ['bottomCenter'], pageSize: 5 }}
+          pagination={{
+            position: ['bottomCenter'],
+            pageSize: pageSize,
+            showSizeChanger: true,
+            pageSizeOptions: ['5', '10', '20', '50', '100'],
+            onShowSizeChange: onShowSizeChange,
+          }}
           columns={columns}
           dataSource={data}
           className="dark:bg-boxdark"

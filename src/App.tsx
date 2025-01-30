@@ -7,7 +7,6 @@ import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 
 import Chart from './pages/Chart';
-import FormElements from './pages/Form/FormElements';
 import FormLayout from './pages/Form/FormLayout';
 import Settings from './pages/Settings';
 import Tables from './pages/Tables';

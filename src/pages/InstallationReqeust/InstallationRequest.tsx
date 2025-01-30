@@ -92,7 +92,7 @@ export const InstallationRequest = () => {
           <CustomButton
             icon={<Eye className="w-4 h-4" />}
             aria-label="View"
-            variant="outline"
+            variant="danger"
             isIconOnly
             size="sm"
           />
