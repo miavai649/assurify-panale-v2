@@ -8,7 +8,7 @@ import { Eye, Trash } from 'lucide-react';
 import CustomTable from '../../components/Tables/CustomTable';
 import CustomModal from '../../components/modal';
 import { DiamondPlus } from 'lucide-react';
-import CreateThemeDataForm from '../../components/form/createThemeDataForm';
+import CreateThemeDataForm from '../../components/form/ThemeDataForm';
 
 const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
@@ -118,7 +118,7 @@ const ThemeData = () => {
             Add New Theme
           </>
         }
-        modalContent={<CreateThemeDataForm isModal={true} />}
+        modalContent={<CreateThemeDataForm isModal={true} defaultData={{}} />}
       />
 
       {/* theme data table */}

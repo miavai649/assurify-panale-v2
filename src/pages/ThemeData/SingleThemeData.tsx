@@ -2,10 +2,10 @@ import { ConfigProvider } from 'antd';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useColorModeContext } from '../../context/ColorModeContext';
-import CreateThemeDataForm from '../../components/form/createThemeDataForm';
+import CreateThemeDataForm from '../../components/form/ThemeDataForm';
 
 const SingleThemeData = () => {
-  const [themedata, setThemedata] = useState({});
+  const [themeData, setThemeData] = useState({});
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const { state } = useColorModeContext();
@@ -15,12 +15,12 @@ const SingleThemeData = () => {
     setLoading(true);
     fetch(`https://origin.assurify.app/api/admin/selectors/view/${id}`, {
       headers: {
-        Authorization: `Bearer YOUR_TOKEN_HERE`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg0NjQyMjgsImV4cCI6MTczODU1MDYyOH0.VNq1tTGNsh9HUsjFyEivUJzYWoKSUwPQUuoVx-_ZKRc`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        setThemeData(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -40,7 +40,7 @@ const SingleThemeData = () => {
         },
       }}
     >
-      <CreateThemeDataForm isModal={false} />
+      <CreateThemeDataForm isModal={false} defaultData={themeData} />
     </ConfigProvider>
   );
 };
