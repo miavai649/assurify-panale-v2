@@ -51,7 +51,7 @@ const ThemeData = () => {
       key: 'view',
       render: (key) => (
         <div className="flex gap-3">
-          <NavLink to={`/installation-request/view/${key}`}>
+          <NavLink to={`/theme-data/view/${key}`}>
             <CustomButton
               icon={<Eye className="w-4 h-4" />}
               aria-label="View"
@@ -75,12 +75,11 @@ const ThemeData = () => {
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/get-selectors', {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3MzgxNDIzOTIsImV4cCI6MTczODIyODc5Mn0.iMx3p-0JLnmUlgW30tJ8AS8MwzQjigBXYBDnKgm0i9k`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg0NjQyMjgsImV4cCI6MTczODU1MDYyOH0.VNq1tTGNsh9HUsjFyEivUJzYWoKSUwPQUuoVx-_ZKRc`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setThemeData(data?.rows);
         setLoading(false);
       });
@@ -119,7 +118,7 @@ const ThemeData = () => {
             Add New Theme
           </>
         }
-        modalContent={<CreateThemeDataForm />}
+        modalContent={<CreateThemeDataForm isModal={true} />}
       />
 
       {/* theme data table */}

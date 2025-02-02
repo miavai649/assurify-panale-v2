@@ -6,67 +6,55 @@ const onFinish = (values: any) => {
   console.log('Received values of form:', values);
 };
 
-const CreateThemeDataForm = () => (
+interface ICreateThemeDataForm {
+  isModal?: boolean;
+}
+
+const CreateThemeDataForm = ({ isModal = false }: ICreateThemeDataForm) => (
   <Form
-    name="dynamic_form_nest_item"
+    name="create_theme_data"
     onFinish={onFinish}
-    className=" mx-auto pt-5"
+    className="mx-auto pt-5"
     autoComplete="on"
     initialValues={{ users: [{}] }}
     layout="vertical"
   >
-    {/* Theme Input Field */}
-    <Form.Item
-      name="theme"
-      label="Theme"
-      // rules={[{ required: true, message: 'Theme is required' }]}
-    >
+    <Form.Item name="theme" label="Theme">
       <Input placeholder="Enter theme" />
     </Form.Item>
 
-    {/* Dynamic Form List */}
     <Form.List name="users">
       {(fields, { add, remove }) => (
         <>
           {fields.map(({ key, name, ...restField }) => (
-            <div key={key} className="flex  gap-4 w-full">
+            <div key={key} className="flex gap-4 w-full">
               <Form.Item
                 {...restField}
                 name={[name, 'first']}
-                label="Mutate Data"
+                label="Mutate Data (Cart)"
                 className="w-full sm:w-1/3"
               >
-                <Input
-                  prefix={<p>Cart</p>}
-                  placeholder=".cart__ctas, cart__summary"
-                />
+                <Input placeholder=".cart__ctas, cart__summary" />
               </Form.Item>
 
               <Form.Item
                 {...restField}
                 name={[name, 'last1']}
-                label="*"
+                label="Subtotal"
                 className="w-full sm:w-1/3"
               >
-                <Input
-                  prefix={<p>Subtotal</p>}
-                  placeholder="totals__total-value"
-                />
+                <Input placeholder="totals__total-value" />
               </Form.Item>
 
               <Form.Item
                 {...restField}
                 name={[name, 'last2']}
-                label="*"
+                label="Checkout"
                 className="w-full sm:w-1/3"
               >
-                <Input
-                  prefix={<p>Checkout</p>}
-                  placeholder=".cart__ctas .cart__checkout-button"
-                />
+                <Input placeholder=".cart__ctas .cart__checkout-button" />
               </Form.Item>
 
-              {/* Remove Button */}
               {fields.length > 1 && (
                 <MinusCircleOutlined
                   onClick={() => remove(name)}
@@ -76,15 +64,17 @@ const CreateThemeDataForm = () => (
             </div>
           ))}
 
-          {/* Add Field and Submit Buttons */}
           <Form.Item>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-between">
               <CustomButton
                 variant="outline"
                 onClick={() => add()}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto "
               >
-                <PlusOutlined /> Add Field
+                <PlusOutlined className={`${!isModal && 'dark:text-white'}`} />{' '}
+                <span className={`${!isModal && 'dark:text-white'}`}>
+                  Add Field
+                </span>
               </CustomButton>
 
               <CustomButton type="submit" className="w-full sm:w-auto">

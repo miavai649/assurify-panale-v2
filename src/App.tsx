@@ -17,6 +17,7 @@ import Dashboard from './pages/Dashboard';
 import { InstallationRequest } from './pages/InstallationReqeust/InstallationRequest';
 import SingleInstallationRequest from './pages/InstallationReqeust/SingleInstallationRequest';
 import ThemeData from './pages/ThemeData';
+import SingleThemeData from './pages/ThemeData/SingleThemeData';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -68,6 +69,15 @@ function App() {
             <>
               <PageTitle title="Theme Data | Assurify Theme Data" />
               <ThemeData />
+            </>
+          }
+        />
+        <Route
+          path="/theme-data/view/:id"
+          element={
+            <>
+              <PageTitle title="Theme Data | Assurify Single Theme Data" />
+              <SingleThemeData />
             </>
           }
         />

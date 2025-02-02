@@ -11,23 +11,6 @@ const useColorMode = () => {
     colorMode === 'dark'
       ? bodyClass.add(className)
       : bodyClass.remove(className);
-
-    const tableContainer = window.document.querySelector(
-      '.ant-table',
-    ) as HTMLElement;
-
-    const tableHeader = window.document.querySelector(
-      '.ant-table-thead',
-    ) as HTMLElement;
-    if (tableContainer) {
-      tableContainer.style.backgroundColor =
-        colorMode === 'dark' ? '#24303F' : '#fff';
-    }
-
-    if (tableHeader) {
-      tableHeader.style.backgroundColor =
-        colorMode === 'dark' ? '#24303F' : '#fff';
-    }
   }, [colorMode]);
 
   return [colorMode, setColorMode];
