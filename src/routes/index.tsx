@@ -1,6 +1,7 @@
 import Dashboard from '../pages/Dashboard';
 import { InstallationRequest } from '../pages/InstallationReqeust/InstallationRequest';
 import SingleInstallationRequest from '../pages/InstallationReqeust/SingleInstallationRequest';
+import Promotions from '../pages/Promotions';
 import ThemeData from '../pages/ThemeData';
 import SingleThemeData from '../pages/ThemeData/SingleThemeData';
 
@@ -40,5 +41,12 @@ export const assurify_panel_routes = [
         element: <SingleThemeData />,
       },
     ],
+  },
+  {
+    navigateLink: 'promotions',
+    iconName: 'promotion',
+    title: 'Promotions',
+    pageTitle: 'Theme Data | Assurify Promotions',
+    element: <Promotions />,
   },
 ];

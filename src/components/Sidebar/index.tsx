@@ -101,6 +101,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* assurify panel routes items */}
               {panelRoutes.map((route) => (
                 <SidebarItem
+                  key={route.navigateLink}
                   navigateLink={route.navigateLink}
                   iconName={route.iconName}
                   title={route.title}

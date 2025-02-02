@@ -46,11 +46,7 @@ const CustomTable = <T extends object>({
           bordered
           size={tableSize}
           loading={loading}
-          title={() => (
-            <div className="text-title-md font-bold text-black dark:text-white">
-              {tableTitle}
-            </div>
-          )}
+          title={() => <div>{tableTitle}</div>}
           pagination={{
             position: ['bottomCenter'],
             pageSize: pageSize,
