@@ -4,6 +4,7 @@ import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../images/logo/logo.svg';
 import SvgIcon from '../Svg';
 import SidebarItem from './SidebarItems';
+import { assurify_panel_routes as panelRoutes } from '../../routes/index';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -97,44 +98,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </h3>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {/* <!-- Menu Item dashboard --> */}
-
-              <SidebarItem
-                navigateLink={'index'}
-                iconName="dashboard"
-                title="Dashboard"
-              />
-              {/* <!-- Menu Item dashboard --> */}
-
-              {/* <!-- Menu Item Installation Request --> */}
-              <li>
-                <NavLink
-                  to="/installation-request"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('installation-request') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <SvgIcon name="installationRequest" />
-                  Installation Request
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Installation Request --> */}
-
-              {/* <!-- Menu Item Theme Data --> */}
-              <li>
-                <NavLink
-                  to="/theme-data"
-                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                    pathname.includes('theme-data') &&
-                    'bg-graydark dark:bg-meta-4'
-                  }`}
-                >
-                  <SvgIcon name="themeData" />
-                  Theme Data
-                </NavLink>
-              </li>
-              {/* <!-- Menu Item Theme Data --> */}
+              {/* assurify panel routes items */}
+              {panelRoutes.map((route) => (
+                <SidebarItem
+                  navigateLink={route.navigateLink}
+                  iconName={route.iconName}
+                  title={route.title}
+                />
+              ))}
 
               {/* <!-- Menu Item Tables --> */}
               <li>

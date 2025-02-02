@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
@@ -13,74 +12,21 @@ import Tables from './pages/Tables';
 import Alerts from './pages/UiElements/Alerts';
 import Buttons from './pages/UiElements/Buttons';
 import DefaultLayout from './layout/DefaultLayout';
-import Dashboard from './pages/Dashboard';
-import { InstallationRequest } from './pages/InstallationReqeust/InstallationRequest';
-import SingleInstallationRequest from './pages/InstallationReqeust/SingleInstallationRequest';
-import ThemeData from './pages/ThemeData';
-import SingleThemeData from './pages/ThemeData/SingleThemeData';
+import { assurify_panel_routes as panelRoutes } from './routes';
+import { renderRoutes } from './lib/renderRoutes';
 
 function App() {
-  const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
-
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <DefaultLayout>
       <Routes>
-        <Route
-          index
-          element={
-            <>
-              <PageTitle title="Dashboard | Assurify Panel Dashboard" />
-              <Dashboard />
-            </>
-          }
-        />
-        <Route
-          path="/installation-request"
-          element={
-            <>
-              <PageTitle title="Installation Request | Assurify Installation Request" />
-              <InstallationRequest />
-            </>
-          }
-        />
-        <Route
-          path="/installation-request/view/:id"
-          element={
-            <>
-              <PageTitle title="Single Installation Request | Assurify Single Installation Request" />
-              <SingleInstallationRequest />
-            </>
-          }
-        />
-        <Route
-          path="/theme-data"
-          element={
-            <>
-              <PageTitle title="Theme Data | Assurify Theme Data" />
-              <ThemeData />
-            </>
-          }
-        />
-        <Route
-          path="/theme-data/view/:id"
-          element={
-            <>
-              <PageTitle title="Theme Data | Assurify Single Theme Data" />
-              <SingleThemeData />
-            </>
-          }
-        />
+        {/* dynamically generated routes */}
+        {renderRoutes(panelRoutes)}
         <Route
           path="/forms/form-layout"
           element={
