@@ -31,13 +31,13 @@ const SignIn: React.FC = () => {
             </span>
           </div>
 
-          {/* Right Side Content */}
+          {/* right side content  */}
           <div className="w-full xl:w-1/2 border-stroke dark:border-strokedark xl:border-l-2 p-4 sm:p-12.5 xl:p-17.5">
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               Sign In
             </h2>
 
-            {/* Sign In Form */}
+            {/* sign in form */}
             <form onSubmit={handleSubmit}>
               <CustomInputField
                 label="Email"
