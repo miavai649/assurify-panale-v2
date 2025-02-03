@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { TableColumnsType } from 'antd';
+import { ConfigProvider, TableColumnsType } from 'antd';
 import { NavLink } from 'react-router-dom';
 
 import CustomButton from '../../components/CustomButton';
@@ -9,6 +9,7 @@ import CustomTable from '../../components/Tables/CustomTable';
 import CustomModal from '../../components/modal';
 import { DiamondPlus } from 'lucide-react';
 import CreateThemeDataForm from '../../components/form/ThemeDataForm';
+import { useColorModeContext } from '../../context/ColorModeContext';
 
 const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
@@ -95,6 +96,9 @@ const ThemeData = () => {
     };
   });
 
+  const { state } = useColorModeContext();
+  const { colorMode } = state;
+
   return (
     <div>
       <Breadcrumb pageName="Theme Data" />
@@ -118,7 +122,20 @@ const ThemeData = () => {
             Add New Theme
           </>
         }
-        modalContent={<CreateThemeDataForm defaultData={{}} />}
+        modalContent={
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#56A7DC',
+                colorBgContainer: colorMode === 'light' ? '#fff' : '#24303F',
+                colorText: colorMode === 'light' ? '#000' : '#fff',
+                borderRadius: 6,
+              },
+            }}
+          >
+            <CreateThemeDataForm defaultData={{}} />
+          </ConfigProvider>
+        }
       />
 
       {/* theme data table */}
