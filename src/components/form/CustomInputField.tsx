@@ -7,8 +7,9 @@ interface InputFieldProps {
   icon?: string;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
-  value?: string; // Add value prop for controlled component
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Add onChange prop
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
 }
 
 const CustomInputField: React.FC<InputFieldProps> = ({
@@ -20,6 +21,7 @@ const CustomInputField: React.FC<InputFieldProps> = ({
   className = '',
   value,
   onChange,
+  name,
 }) => {
   const sizeClasses = {
     sm: 'py-2 pl-4 pr-8 text-sm',
@@ -35,6 +37,7 @@ const CustomInputField: React.FC<InputFieldProps> = ({
       <div className="relative">
         <input
           type={type}
+          name={name}
           placeholder={placeholder}
           value={value}
           onChange={onChange}

@@ -6,33 +6,14 @@ import Logo from '../../images/logo/logo.svg';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
 
-interface AuthButtonProps {
-  text: string;
-  icon?: string;
-  onClick: () => void;
-  isPrimary?: boolean;
-}
-
-const AuthButton: React.FC<AuthButtonProps> = ({
-  text,
-  icon,
-  onClick,
-  isPrimary = false,
-}) => (
-  <button
-    onClick={onClick}
-    className={`w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition ${
-      isPrimary
-        ? 'border border-primary bg-primary text-white hover:bg-opacity-90'
-        : 'border border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50'
-    }`}
-  >
-    {icon && <SvgIcon name={icon} />}
-    {text}
-  </button>
-);
-
 const SignIn: React.FC = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+    console.log('Form Data Submitted:', data);
+  };
+
   return (
     <>
       <Breadcrumb pageName="Sign In" />
@@ -44,10 +25,7 @@ const SignIn: React.FC = () => {
               <img className="hidden dark:block" src={Logo} alt="Logo" />
               <img className="dark:hidden" src={LogoDark} alt="Logo" />
             </div>
-            <p className="2xl:px-20">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              suspendisse.
-            </p>
+            <p className="2xl:px-20">Lorem ipsum dolor sit amet.</p>
             <span className="mt-15 inline-block">
               <SvgIcon name="authentication" />
             </span>
@@ -56,31 +34,38 @@ const SignIn: React.FC = () => {
           {/* Right Side Content */}
           <div className="w-full xl:w-1/2 border-stroke dark:border-strokedark xl:border-l-2 p-4 sm:p-12.5 xl:p-17.5">
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-              Sign In to TailAdmin
+              Sign In
             </h2>
 
             {/* Sign In Form */}
-            <form>
+            <form onSubmit={handleSubmit}>
               <CustomInputField
                 label="Email"
                 type="email"
+                name="email"
                 placeholder="Enter your email"
                 icon="email"
               />
               <CustomInputField
                 label="Password"
                 type="password"
+                name="password"
                 placeholder="Enter your password"
                 icon="password"
               />
-              <AuthButton text="Sign In" isPrimary onClick={() => {}} />
+              <button
+                type="submit"
+                className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-primary bg-primary text-white hover:bg-opacity-90"
+              >
+                Sign In
+              </button>
             </form>
+
             <div className="my-5">
-              <AuthButton
-                text="Sign in with Google"
-                icon="google"
-                onClick={() => {}}
-              />
+              <button className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                <SvgIcon name="google" />
+                Sign in with Google
+              </button>
             </div>
             <div className="mt-6 text-center">
               <p>
