@@ -118,7 +118,7 @@ const ThemeData = () => {
             Add New Theme
           </>
         }
-        modalContent={<CreateThemeDataForm isModal={true} defaultData={{}} />}
+        modalContent={<CreateThemeDataForm defaultData={{}} />}
       />
 
       {/* theme data table */}

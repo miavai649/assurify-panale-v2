@@ -48,7 +48,7 @@ const SingleThemeData = () => {
         },
       }}
     >
-      <CreateThemeDataForm isModal={false} defaultData={themeData} />
+      <CreateThemeDataForm defaultData={themeData} />
     </ConfigProvider>
   );
 };

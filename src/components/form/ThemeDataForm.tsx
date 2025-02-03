@@ -8,17 +8,13 @@ const onFinish = (values: any) => {
 };
 
 interface ICreateThemeDataForm {
-  isModal?: boolean;
   defaultData?: {
     themeName?: string;
     selector?: { cart: string; subTotal: string; checkOut: string }[];
   };
 }
 
-const CreateThemeDataForm = ({
-  isModal = false,
-  defaultData,
-}: ICreateThemeDataForm) => {
+const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -96,12 +92,7 @@ const CreateThemeDataForm = ({
                   onClick={() => add()}
                   className="w-full sm:w-auto"
                 >
-                  <PlusOutlined
-                    className={`${!isModal && 'dark:text-white'}`}
-                  />{' '}
-                  <span className={`${!isModal && 'dark:text-white'}`}>
-                    Add Field
-                  </span>
+                  <PlusOutlined /> <span>Add Field</span>
                 </CustomButton>
 
                 <CustomButton type="submit" className="w-full sm:w-auto">
