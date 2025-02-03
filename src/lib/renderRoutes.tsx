@@ -9,25 +9,21 @@ interface ChildRoute {
 
 interface ParentRoute {
   navigateLink: string;
-  iconName?: string; // Optional if not used in rendering
+  iconName?: string;
   title: string;
   pageTitle: string;
   element: JSX.Element;
-  children?: ChildRoute[]; // Optional for routes with children
+  children?: ChildRoute[];
 }
 
 type RoutesArray = ParentRoute[];
 
 export const renderRoutes = (routes: RoutesArray) => {
-  return routes.map((route, index) => {
-    // check if the route is the index route
-    const isIndexRoute = route.navigateLink === 'index';
-
-    // render the route conditionally
-    return isIndexRoute ? (
+  return routes.flatMap((route, index) => {
+    const mainRoute = (
       <Route
         key={index}
-        index
+        path={route.navigateLink === 'index' ? '/' : route.navigateLink}
         element={
           <>
             <PageTitle title={route.pageTitle} />
@@ -35,31 +31,22 @@ export const renderRoutes = (routes: RoutesArray) => {
           </>
         }
       />
-    ) : (
-      <Route
-        key={index}
-        path={route.navigateLink}
-        element={
-          <>
-            <PageTitle title={route.pageTitle} />
-            {route.element}
-          </>
-        }
-      >
-        {/* Render child routes if they exist */}
-        {route.children?.map((child, childIndex) => (
-          <Route
-            key={childIndex}
-            path={child.navigateLink}
-            element={
-              <>
-                <PageTitle title={child.pageTitle} />
-                {child.element}
-              </>
-            }
-          />
-        ))}
-      </Route>
     );
+
+    const childRoutes =
+      route.children?.map((child, childIndex) => (
+        <Route
+          key={`${index}-${childIndex}`}
+          path={child.navigateLink}
+          element={
+            <>
+              <PageTitle title={child.pageTitle} />
+              {child.element}
+            </>
+          }
+        />
+      )) || [];
+
+    return [mainRoute, ...childRoutes];
   });
 };

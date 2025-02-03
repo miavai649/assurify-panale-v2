@@ -21,7 +21,7 @@ export const assurify_panel_routes = [
     element: <InstallationRequest />,
     children: [
       {
-        navigateLink: 'installation-request/view/:id',
+        navigateLink: '/installation-request/view/:id',
         pageTitle:
           'Single Installation Request | Assurify Single Installation Request',
         element: <SingleInstallationRequest />,

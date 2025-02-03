@@ -22,10 +22,12 @@ function App() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
+  renderRoutes(panelRoutes);
   return (
     <DefaultLayout>
       <Routes>
         {/* dynamically generated routes */}
+
         {renderRoutes(panelRoutes)}
         <Route
           path="/forms/form-layout"

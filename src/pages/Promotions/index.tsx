@@ -40,7 +40,7 @@ const Promotions = () => {
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/promotions/get-all', {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg0NjQyMjgsImV4cCI6MTczODU1MDYyOH0.VNq1tTGNsh9HUsjFyEivUJzYWoKSUwPQUuoVx-_ZKRc`,
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg1NTkwNTksImV4cCI6MTczODY0NTQ1OX0.tyUSQKEuoNuin8UTbtw5XQLse2LpPo2y_tUuuBghswY`,
       },
     })
       .then((res) => res.json())
