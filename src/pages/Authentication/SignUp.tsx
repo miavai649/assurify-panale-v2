@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../../images/logo/logo.svg';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
+import {
+  doCreateUserWithEmailAndPassword,
+  doSignInWithGoogle,
+} from '../../firebase/auth';
 import toast from 'react-hot-toast';
+import CustomButton from '../../components/CustomButton';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
 
@@ -21,14 +27,31 @@ const SignUp: React.FC = () => {
       );
 
       if (result && result.user) {
-        toast.success('Account created successfully!');
+        toast.success('Account created successfully, Please log in now');
         navigate('/auth/signin');
+        setIsLoading(false);
       } else {
-        toast.error('Something went wrong. Please try again.');
+        setIsLoading(false);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error('error', error);
       toast.error('Something went wrong.');
+    }
+  };
+
+  // handle google sign up function
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await doSignInWithGoogle();
+
+      if (typeof result !== 'string' && result?.user) {
+        toast.success('Logged In Successfully');
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Google Sign-In Error:', error);
+      toast.error('Something Went Wrong');
     }
   };
 
@@ -87,16 +110,22 @@ const SignUp: React.FC = () => {
                 placeholder="Enter your password"
                 icon="password"
               />
-              <button
+              <CustomButton
                 type="submit"
-                className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-primary bg-primary text-white hover:bg-opacity-90"
+                variant="primary"
+                size="md"
+                isLoading={isLoading}
+                className="mt-4 w-full"
               >
                 Sign Up
-              </button>
+              </CustomButton>
             </form>
 
             <div className="my-5">
-              <button className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-strokedark bg-meta-4 hover:bg-opacity-50">
+              <button
+                onClick={handleGoogleSignIn}
+                className="w-full flex items-center justify-center gap-3.5 rounded-lg px-4 py-2 transition border border-strokedark bg-meta-4 hover:bg-opacity-50"
+              >
                 <SvgIcon name="google" />
                 Sign up with Google
               </button>

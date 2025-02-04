@@ -30,7 +30,6 @@ const SignIn: React.FC = () => {
         navigate('/');
         setIsLoading(false);
       } else {
-        toast.error('Something went wrong. Please try again.');
         setIsLoading(false);
       }
     } catch (error) {
@@ -106,7 +105,7 @@ const SignIn: React.FC = () => {
                 isLoading={isLoading}
                 className="mt-4 w-full"
               >
-                Submit
+                Sign In
               </CustomButton>
             </form>
 
