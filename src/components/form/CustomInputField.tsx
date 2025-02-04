@@ -1,15 +1,17 @@
+import { ChangeEvent, ReactNode } from 'react';
 import SvgIcon from '../Svg';
 
 interface InputFieldProps {
-  label: string;
+  label?: string;
   type: string;
   placeholder: string;
   icon?: string;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   name?: string;
+  labelContent?: ReactNode;
 }
 
 const CustomInputField: React.FC<InputFieldProps> = ({
@@ -22,6 +24,7 @@ const CustomInputField: React.FC<InputFieldProps> = ({
   value,
   onChange,
   name,
+  labelContent,
 }) => {
   const sizeClasses = {
     sm: 'py-2 pl-4 pr-8 text-sm',
@@ -31,9 +34,14 @@ const CustomInputField: React.FC<InputFieldProps> = ({
 
   return (
     <div className={`mb-4 ${className}`}>
-      <label className="mb-2.5 block font-medium text-black dark:text-white">
-        {label}
-      </label>
+      {labelContent ? (
+        <>{labelContent}</>
+      ) : (
+        <label className="mb-2.5 block font-medium text-black dark:text-white">
+          {label}
+        </label>
+      )}
+
       <div className="relative">
         <input
           type={type}
