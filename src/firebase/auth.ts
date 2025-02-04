@@ -5,6 +5,7 @@ import {
   signInWithPopup,
 } from 'firebase/auth';
 import { auth } from './firebase';
+import toast from 'react-hot-toast';
 
 export const doCreateUserWithEmailAndPassword = async (
   email: string,
@@ -48,11 +49,14 @@ export const doSignInWithEmailAndPassword = async (
 
 export const doSignInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
+  const result = await signInWithPopup(auth, provider).catch((error) =>
+    toast.error(error.message),
+  );
   return result;
 };
 
 export const doSignOut = async () => {
   const result = await auth.signOut();
+  console.log('🚀 ~ doSignOut ~ result:', result);
   return result;
 };

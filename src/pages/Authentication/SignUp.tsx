@@ -5,13 +5,18 @@ import Logo from '../../images/logo/logo.svg';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
 import { Link } from 'react-router-dom';
+import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
 
 const SignUp: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
-    console.log('Form Data Submitted:', data);
+
+    await doCreateUserWithEmailAndPassword(
+      data.email as string,
+      data.password as string,
+    );
   };
 
   return (
@@ -67,7 +72,7 @@ const SignUp: React.FC = () => {
                   type="submit"
                   className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-primary bg-primary text-white hover:bg-opacity-90"
                 >
-                  Sign In
+                  Sign Up
                 </button>
               </form>
               <div className="my-5">
@@ -78,9 +83,9 @@ const SignUp: React.FC = () => {
               </div>
               <div className="mt-6 text-center">
                 <p>
-                  Don’t have an account?{' '}
+                  Already have an account?{' '}
                   <Link to="/auth/signin" className="text-primary">
-                    Sign Up
+                    Sign In
                   </Link>
                 </p>
               </div>

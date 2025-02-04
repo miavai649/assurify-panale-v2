@@ -22,7 +22,6 @@ function App() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  renderRoutes(panelRoutes);
   return (
     <DefaultLayout>
       <Routes>

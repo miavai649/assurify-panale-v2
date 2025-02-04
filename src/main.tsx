@@ -8,13 +8,16 @@ import 'jsvectormap/dist/css/jsvectormap.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import { ColorModeProvider } from './context/ColorModeContext';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from './context/authContext';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Router>
       <ColorModeProvider>
-        <App />
-        <Toaster position="top-center" reverseOrder={false} />
+        <AuthProvider>
+          <App />
+          <Toaster position="top-center" reverseOrder={false} />
+        </AuthProvider>
       </ColorModeProvider>
     </Router>
   </React.StrictMode>,

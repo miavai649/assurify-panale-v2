@@ -5,13 +5,25 @@ import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
+import { useAuth } from '../../context/authContext';
+import {
+  doSignInWithEmailAndPassword,
+  doSignInWithGoogle,
+} from '../../firebase/auth';
 
 const SignIn: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const { currentUser, userLoggedIn, loading } = useAuth();
+  console.log('🚀 ~ currentUser:', { currentUser, userLoggedIn, loading });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
-    console.log('Form Data Submitted:', data);
+
+    await doSignInWithEmailAndPassword(
+      data.email as string,
+      data.password as string,
+    );
   };
 
   return (
@@ -62,7 +74,10 @@ const SignIn: React.FC = () => {
             </form>
 
             <div className="my-5">
-              <button className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+              <button
+                onClick={doSignInWithGoogle}
+                className="w-full flex items-center justify-center gap-3.5 rounded-lg p-4 transition border border-stroke bg-gray hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50"
+              >
                 <SvgIcon name="google" />
                 Sign in with Google
               </button>
