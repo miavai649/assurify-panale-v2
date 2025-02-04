@@ -17,12 +17,28 @@ export const doCreateUserWithEmailAndPassword = async (
       email,
       password,
     );
-    console.log(
-      '🚀 ~ doCreateUserWithEmailAndPassword ~ userCredential:',
-      userCredential,
-    );
-    return userCredential.user;
-  } catch (error) {
+
+    return userCredential;
+  } catch (error: any) {
+    if (error && error.code) {
+      switch (error.code) {
+        case 'auth/weak-password':
+          toast.error('Password should be at least 6 characters.');
+          break;
+        case 'auth/email-already-in-use':
+          toast.error('This email is already in use. Please try logging in.');
+          break;
+        case 'auth/invalid-email':
+          toast.error(
+            'The email address is not valid. Please check and try again.',
+          );
+          break;
+        default:
+          toast.error('Something went wrong. Please try again.');
+          break;
+      }
+    }
+
     return error;
   }
 };
@@ -37,12 +53,18 @@ export const doSignInWithEmailAndPassword = async (
       email,
       password,
     );
-    console.log(
-      '🚀 ~ doCreateUserWithEmailAndPassword ~ userCredential:',
-      userCredential,
-    );
-    return userCredential.user;
-  } catch (error) {
+
+    return userCredential;
+  } catch (error: any) {
+    switch (error.code) {
+      case 'auth/invalid-credential':
+        toast.error('Invalid Credential');
+        break;
+
+      default:
+        toast.error('Something went wrong. Please try again.');
+        break;
+    }
     return error;
   }
 };
@@ -57,6 +79,5 @@ export const doSignInWithGoogle = async () => {
 
 export const doSignOut = async () => {
   const result = await auth.signOut();
-  console.log('🚀 ~ doSignOut ~ result:', result);
   return result;
 };
