@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import SidebarLinkGroup from './SidebarLinkGroup';
+import { useEffect, useRef, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import Logo from '../../images/logo/logo.svg';
 import SvgIcon from '../Svg';
 import SidebarItem from './SidebarItems';
@@ -12,9 +11,6 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const location = useLocation();
-  const { pathname } = location;
-
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
