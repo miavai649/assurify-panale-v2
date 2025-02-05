@@ -2,13 +2,17 @@ import { TableColumnsType } from 'antd';
 import { useEffect, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CustomTable from '../../components/Tables/CustomTable';
+import CustomButton from '../../components/CustomButton';
+import { DownloadOutlined } from '@ant-design/icons';
+import toast from 'react-hot-toast';
 
 const Promotions = () => {
   const [loading, setLoading] = useState(true);
-  const [promotions, setPromotions] = useState([]);
+  const [promotions, setPromotions] = useState<any[]>([]);
   const [plan, setPlan] = useState([]);
   const token = localStorage.getItem('accessToken');
 
+  // promotions table column
   const columns: TableColumnsType<any> = [
     {
       title: 'Id',
@@ -39,6 +43,7 @@ const Promotions = () => {
     },
   ];
 
+  // fetching promotions data
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/promotions/get-all', {
       headers: {
@@ -52,6 +57,7 @@ const Promotions = () => {
       });
   }, []);
 
+  // fetching plans data
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/plans', {
       headers: {
@@ -65,6 +71,7 @@ const Promotions = () => {
       });
   }, []);
 
+  // configuring data for showing in the table
   const data = promotions?.map((promotion: any) => {
     return {
       key: promotion?.id,
@@ -76,9 +83,36 @@ const Promotions = () => {
     };
   });
 
+  // download csv file function
+  const downloadCsv = () => {
+    const keys: string[] = [];
+
+    promotions.forEach((promotion: any) => {
+      keys.push(promotion.key);
+    });
+
+    if (keys.length == 0) return toast.error('No keys found!');
+
+    const csv = keys.join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.setAttribute('hidden', '');
+    a.setAttribute('href', url);
+    a.setAttribute('download', 'promotions.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   return (
     <div>
       <Breadcrumb pageName="Promotions" />
+
+      <CustomButton onClick={downloadCsv} className="mb-3">
+        <DownloadOutlined /> <span>Download CSV</span>
+      </CustomButton>
 
       <CustomTable
         tableTitle={`Total ${data?.length} keys`}
