@@ -6,6 +6,7 @@ import CustomTable from '../../components/Tables/CustomTable';
 const Promotions = () => {
   const [loading, setLoading] = useState(true);
   const [promotions, setPromotions] = useState([]);
+  const [plan, setPlan] = useState([]);
   const token = localStorage.getItem('accessToken');
 
   const columns: TableColumnsType<any> = [
@@ -47,6 +48,19 @@ const Promotions = () => {
       .then((res) => res.json())
       .then((data) => {
         setPromotions(data);
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch('https://origin.assurify.app/api/admin/plans', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPlan(data);
         setLoading(false);
       });
   }, []);
