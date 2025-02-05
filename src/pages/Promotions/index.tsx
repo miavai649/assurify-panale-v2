@@ -5,11 +5,17 @@ import CustomTable from '../../components/Tables/CustomTable';
 import CustomButton from '../../components/CustomButton';
 import { DownloadOutlined } from '@ant-design/icons';
 import toast from 'react-hot-toast';
+import SelectBox from '../../components/SelectBox';
+import CustomInputField from '../../components/form/CustomInputField';
 
 const Promotions = () => {
+  const [planId, setPlanId] = useState<number | string>('');
+  const [count, setCount] = useState<number | string>('');
   const [loading, setLoading] = useState(true);
   const [promotions, setPromotions] = useState<any[]>([]);
-  const [plan, setPlan] = useState([]);
+  const [plans, setPlans] = useState<
+    { id: number; name: string; price: number }[]
+  >([]);
   const token = localStorage.getItem('accessToken');
 
   // promotions table column
@@ -67,7 +73,7 @@ const Promotions = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setPlan(data);
+        setPlans(data);
         setLoading(false);
       });
   }, []);
@@ -107,9 +113,42 @@ const Promotions = () => {
     document.body.removeChild(a);
   };
 
+  // select plan options
+  const options = plans
+    ?.filter((plan) => plan?.price == 0)
+    .map((plan) => ({ value: plan?.id, label: plan?.name }));
+
+  // generate key function
+  const generateKeys = async () => {
+    const formData = new FormData();
+    console.log(planId, count);
+
+    setCount('');
+    setPlanId('');
+    toast.success('Successfully created!');
+  };
   return (
     <div>
       <Breadcrumb pageName="Promotions" />
+
+      <div className="mb-6 h-full grid grid-cols-12 gap-4 items-center justify-center">
+        <SelectBox
+          onChange={setPlanId}
+          className="col-span-6"
+          options={options}
+        />
+
+        <CustomInputField
+          className="col-span-4 mb-2 "
+          placeholder="Enter your count"
+          size="md"
+          onChange={(e) => setCount(e.target.value)}
+          type="number"
+        />
+        <CustomButton size="md" onClick={generateKeys} className="col-span-2 ">
+          Generate Key
+        </CustomButton>
+      </div>
 
       <CustomButton onClick={downloadCsv} className="mb-3">
         <DownloadOutlined /> <span>Download CSV</span>

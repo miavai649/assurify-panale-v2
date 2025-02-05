@@ -200,16 +200,18 @@ const SingleInstallationRequest = () => {
           } text-gray-800 dark:text-white`}
         />
         <Flex justify="space-between" className="mt-4">
-          <SelectBox
-            options={[
-              { value: 'pending', label: 'Pending' },
-              { value: 'in_progress', label: 'In Progress' },
-              { value: 'resolved', label: 'Resolved' },
-              { value: 'cancelled', label: 'Cancelled' },
-            ]}
-            placeholder="Select a status"
-            onChange={(value) => setStatus(value)}
-          />
+          <div className="w-1/3">
+            <SelectBox
+              options={[
+                { value: 'pending', label: 'Pending' },
+                { value: 'in_progress', label: 'In Progress' },
+                { value: 'resolved', label: 'Resolved' },
+                { value: 'cancelled', label: 'Cancelled' },
+              ]}
+              placeholder="Select a status"
+              onChange={(value) => setStatus(value as string)}
+            />
+          </div>
           <CustomButton onClick={handleSubmit}>Submit</CustomButton>
         </Flex>
       </div>

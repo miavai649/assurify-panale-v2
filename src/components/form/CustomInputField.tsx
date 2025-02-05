@@ -33,7 +33,7 @@ const CustomInputField: React.FC<InputFieldProps> = ({
   };
 
   return (
-    <div className={`mb-4 ${className}`}>
+    <div className={`${className}`}>
       {labelContent ? (
         <>{labelContent}</>
       ) : (

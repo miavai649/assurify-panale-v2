@@ -35,9 +35,9 @@ const CustomButton: React.FC<ButtonProps> = ({
   };
 
   const sizeStyles = {
-    sm: isIconOnly ? 'p-2' : 'px-2 py-1 text-sm',
-    md: isIconOnly ? 'p-3' : 'px-4 py-2 text-base',
-    lg: isIconOnly ? 'p-4' : 'px-6 py-3 text-lg',
+    sm: isIconOnly ? 'p-2' : 'px-2 py-2 text-sm',
+    md: isIconOnly ? 'p-3' : 'px-4 py-4 text-base',
+    lg: isIconOnly ? 'p-4' : 'px-6 py-5 text-lg',
   };
 
   return (
