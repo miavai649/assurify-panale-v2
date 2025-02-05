@@ -26,6 +26,18 @@ const SignIn: React.FC = () => {
         data.password as string,
       );
       if (result && result.user) {
+        const response = await fetch(
+          'http://localhost:3000/api/v1/auth/login',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: data.email }),
+          },
+        );
+        const accessToken = await response.json();
+        await localStorage.setItem('accessToken', accessToken.data);
         toast.success('Logged in successfully');
         navigate('/');
         setIsLoading(false);

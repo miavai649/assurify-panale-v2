@@ -15,6 +15,7 @@ const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addNewThemeModal, setAddNewThemeModal] = useState(false);
+  const token = localStorage.getItem('accessToken');
 
   const columns: TableColumnsType<any> = [
     {
@@ -76,7 +77,7 @@ const ThemeData = () => {
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/get-selectors', {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg1NTkwNTksImV4cCI6MTczODY0NTQ1OX0.tyUSQKEuoNuin8UTbtw5XQLse2LpPo2y_tUuuBghswY`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
