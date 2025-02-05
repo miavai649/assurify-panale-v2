@@ -17,6 +17,7 @@ const Promotions = () => {
     {
       title: 'Id',
       dataIndex: 'id',
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: 'Key',
