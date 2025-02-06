@@ -97,10 +97,6 @@ const SingleInstallationRequest = () => {
       formData.append('reportContent', value);
       formData.append('status', status);
 
-      console.log({
-        reportContent: formData.get('reportContent'),
-        status: formData.get('status'),
-      });
       const response = await fetch(
         `https://origin.assurify.app/api/admin/supports/update/${id}`,
         {

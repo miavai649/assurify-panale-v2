@@ -17,7 +17,7 @@ interface ICreateThemeDataForm {
 }
 
 const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
-  //  initial form state
+  // initial form state
   const initialFormState = {
     theme: defaultData?.themeName || '',
     selector: defaultData?.selector || [
@@ -67,9 +67,13 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
   };
 
   // handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form Data Submitted:', form);
+    const formData = new FormData();
+
+    formData.append('themeName', form.theme);
+    formData.append('selectorJson', JSON.stringify(form.selector));
 
     setForm(initialFormState);
   };
@@ -136,8 +140,10 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
       ))}
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-between">
+        {/* Add type="button" to prevent form submission */}
         <CustomButton
           variant="outline"
+          type="button"
           onClick={handleAddField}
           className="w-full sm:w-auto"
         >

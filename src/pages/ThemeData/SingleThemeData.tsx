@@ -10,12 +10,13 @@ const SingleThemeData = () => {
   const { id } = useParams();
   const { state } = useColorModeContext();
   const { colorMode } = state;
+  const token = localStorage.getItem('accessToken');
 
   useEffect(() => {
     setLoading(true);
     fetch(`https://origin.assurify.app/api/admin/selectors/view/${id}`, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg1NTkwNTksImV4cCI6MTczODY0NTQ1OX0.tyUSQKEuoNuin8UTbtw5XQLse2LpPo2y_tUuuBghswY`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
