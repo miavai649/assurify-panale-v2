@@ -4,6 +4,7 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  QuestionCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
 import CustomTable from '../../components/Tables/CustomTable';
@@ -11,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import CustomButton from '../../components/CustomButton';
+import CustomStatusTag from '../../components/CustomStatusTag';
 
 export const InstallationRequest = () => {
   const [supports, setSupports] = useState([]);
@@ -31,27 +33,7 @@ export const InstallationRequest = () => {
       title: 'Status',
       dataIndex: 'status',
       render: (status: string) => {
-        return (
-          <>
-            {status === 'pending' ? (
-              <Tag icon={<ClockCircleOutlined />} color="default">
-                Pending
-              </Tag>
-            ) : status === 'in_progress' ? (
-              <Tag icon={<SyncOutlined spin />} color="processing">
-                In Progress
-              </Tag>
-            ) : status === 'resolved' ? (
-              <Tag icon={<CheckCircleOutlined />} color="success">
-                Resolved
-              </Tag>
-            ) : (
-              <Tag icon={<CloseCircleOutlined />} color="error">
-                Cancelled
-              </Tag>
-            )}
-          </>
-        );
+        return <CustomStatusTag status={status} />;
       },
       filters: [
         {

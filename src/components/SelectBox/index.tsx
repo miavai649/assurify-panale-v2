@@ -11,6 +11,7 @@ interface SelectBoxProps {
   placeholder?: string;
   onChange?: (value: string | number) => void;
   className?: string;
+  defaultValue?: Option;
 }
 
 const SelectBox: React.FC<SelectBoxProps> = ({
@@ -18,10 +19,15 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   placeholder = 'Select an option',
   onChange,
   className,
+  defaultValue,
 }) => {
   const [selected, setSelected] = useState<Option | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  if (defaultValue) {
+    setSelected(defaultValue);
+  }
 
   const handleSelect = (option: Option) => {
     setSelected(option);

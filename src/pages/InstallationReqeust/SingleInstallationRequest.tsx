@@ -1,8 +1,9 @@
-import { Tag, Card, Spin, Flex, Typography } from 'antd';
+import { Tag, Card, Flex, Typography } from 'antd';
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  QuestionCircleOutlined,
   SyncOutlined,
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -13,6 +14,7 @@ import { useColorModeContext } from '../../context/ColorModeContext';
 import SelectBox from '../../components/SelectBox';
 import CustomButton from '../../components/CustomButton';
 import Loader from '../../common/Loader';
+import CustomStatusTag from '../../components/CustomStatusTag';
 
 const { Title } = Typography;
 
@@ -89,7 +91,7 @@ const SingleInstallationRequest = () => {
   }, [id]);
 
   // submit function for report and status submit
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const formData = new FormData();
 
     formData.append('reportContent', value);
@@ -148,23 +150,7 @@ const SingleInstallationRequest = () => {
             <span className="font-bold text-gray-600 dark:text-gray-300">
               Status:
             </span>
-            {support?.status === 'pending' ? (
-              <Tag icon={<ClockCircleOutlined />} color="default">
-                Pending
-              </Tag>
-            ) : support?.status === 'in_progress' ? (
-              <Tag icon={<SyncOutlined spin />} color="processing">
-                In Progress
-              </Tag>
-            ) : support?.status === 'resolved' ? (
-              <Tag icon={<CheckCircleOutlined />} color="success">
-                Resolved
-              </Tag>
-            ) : (
-              <Tag icon={<CloseCircleOutlined />} color="error">
-                Cancelled
-              </Tag>
-            )}
+            <CustomStatusTag status={support?.status as string} />
           </div>
 
           <div className="flex items-center justify-between">
