@@ -1,6 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { ConfigProvider, TableColumnsType } from 'antd';
+import {
+  Button,
+  ConfigProvider,
+  Input,
+  InputRef,
+  Space,
+  TableColumnsType,
+  TableColumnType,
+} from 'antd';
 import { NavLink } from 'react-router-dom';
 
 import CustomButton from '../../components/CustomButton';
@@ -10,17 +18,82 @@ import CustomModal from '../../components/modal';
 import { DiamondPlus } from 'lucide-react';
 import CreateThemeDataForm from '../../components/form/ThemeDataForm';
 import { useColorModeContext } from '../../context/ColorModeContext';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 
 const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addNewThemeModal, setAddNewThemeModal] = useState(false);
   const token = localStorage.getItem('accessToken');
+  const [searchText, setSearchText] = useState('');
+  const searchInput = useRef<InputRef>(null);
+
+  interface DataType {
+    key: string;
+    name: string;
+    age: number;
+    address: string;
+    theme: string;
+  }
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps['confirm'],
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+  };
+
+  const getColumnSearchProps = (): TableColumnType<DataType> => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search Theme`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <CustomButton
+            size="sm"
+            onClick={() => handleSearch(selectedKeys as string[], confirm)}
+          >
+            Search
+          </CustomButton>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record['theme']
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+
+    render: (text) => (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[searchText]}
+        autoEscape
+        textToHighlight={text ? text.toString() : ''}
+      />
+    ),
+  });
 
   const columns: TableColumnsType<any> = [
     {
       title: 'Theme',
       dataIndex: 'theme',
+      width: '15%',
+      ...getColumnSearchProps(),
     },
     {
       title: 'Request By',
