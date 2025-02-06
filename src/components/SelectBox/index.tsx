@@ -25,9 +25,11 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  if (defaultValue) {
-    setSelected(defaultValue);
-  }
+  useEffect(() => {
+    if (defaultValue) {
+      setSelected(defaultValue);
+    }
+  }, [defaultValue]);
 
   const handleSelect = (option: Option) => {
     setSelected(option);

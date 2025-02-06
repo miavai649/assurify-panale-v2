@@ -1,12 +1,5 @@
-import { TableColumnsType, Tag } from 'antd';
+import { TableColumnsType } from 'antd';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  QuestionCircleOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
 import CustomTable from '../../components/Tables/CustomTable';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';

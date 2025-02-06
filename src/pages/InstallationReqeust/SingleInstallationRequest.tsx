@@ -1,11 +1,5 @@
-import { Tag, Card, Flex, Typography } from 'antd';
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  QuestionCircleOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
+import { Card, Flex, Typography } from 'antd';
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
@@ -98,6 +92,15 @@ const SingleInstallationRequest = () => {
     formData.append('status', status);
   };
 
+  // status options
+  const options = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'open', label: 'Pending' },
+    { value: 'in_progress', label: 'In Progress' },
+    { value: 'resolved', label: 'Resolved' },
+    { value: 'cancelled', label: 'Cancelled' },
+  ];
+
   if (loading) {
     return <Loader />;
   }
@@ -189,12 +192,10 @@ const SingleInstallationRequest = () => {
         <Flex justify="space-between" className="mt-4">
           <div className="w-1/3">
             <SelectBox
-              options={[
-                { value: 'pending', label: 'Pending' },
-                { value: 'in_progress', label: 'In Progress' },
-                { value: 'resolved', label: 'Resolved' },
-                { value: 'cancelled', label: 'Cancelled' },
-              ]}
+              options={options}
+              defaultValue={options.find(
+                (options) => options.value === support?.status,
+              )}
               placeholder="Select a status"
               onChange={(value) => setStatus(value as string)}
             />
