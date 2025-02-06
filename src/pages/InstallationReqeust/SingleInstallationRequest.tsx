@@ -9,6 +9,7 @@ import SelectBox from '../../components/SelectBox';
 import CustomButton from '../../components/CustomButton';
 import Loader from '../../common/Loader';
 import CustomStatusTag from '../../components/CustomStatusTag';
+import toast from 'react-hot-toast';
 
 const { Title } = Typography;
 
@@ -55,8 +56,9 @@ const modules = {
 
 const SingleInstallationRequest = () => {
   const [support, setSupport] = useState<SupportData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
+
   const [value, setValue] = useState('');
   const { state } = useColorModeContext();
   const { colorMode } = state;
@@ -67,6 +69,7 @@ const SingleInstallationRequest = () => {
 
   // dynamically fetching single installation request data
   useEffect(() => {
+    setLoading(true);
     fetch(`https://origin.assurify.app/api/admin/supports/view/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -75,6 +78,7 @@ const SingleInstallationRequest = () => {
       .then((res) => res.json())
       .then((data) => {
         setSupport(data);
+        setStatus(data?.status);
         setLoading(false);
         setValue(data?.reportContent || null);
       })
@@ -86,16 +90,47 @@ const SingleInstallationRequest = () => {
 
   // submit function for report and status submit
   const handleSubmit = async () => {
-    const formData = new FormData();
+    try {
+      setLoading(true);
+      const formData = new FormData();
 
-    formData.append('reportContent', value);
-    formData.append('status', status);
+      formData.append('reportContent', value);
+      formData.append('status', status);
+
+      console.log({
+        reportContent: formData.get('reportContent'),
+        status: formData.get('status'),
+      });
+      const response = await fetch(
+        `https://origin.assurify.app/api/admin/supports/update/${id}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        },
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success('Installation Request Updated Successfully');
+        setLoading(false);
+      } else {
+        toast.error(data.error);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast.error('Something Went Wrong');
+      setLoading(false);
+    }
   };
 
   // status options
   const options = [
     { value: 'pending', label: 'Pending' },
-    { value: 'open', label: 'Pending' },
+    { value: 'open', label: 'Open' },
     { value: 'in_progress', label: 'In Progress' },
     { value: 'resolved', label: 'Resolved' },
     { value: 'cancelled', label: 'Cancelled' },
@@ -183,7 +218,7 @@ const SingleInstallationRequest = () => {
           modules={modules}
           formats={formats}
           placeholder="Write your report here..."
-          value={value}
+          value={value ? value : ''}
           onChange={setValue}
           className={`${
             colorMode === 'dark' ? 'dark-quill' : 'light-quill'
