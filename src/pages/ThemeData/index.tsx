@@ -4,6 +4,7 @@ import {
   ConfigProvider,
   Input,
   InputRef,
+  Modal,
   Space,
   TableColumnsType,
   TableColumnType,
@@ -18,8 +19,9 @@ import { DiamondPlus } from 'lucide-react';
 import CreateThemeDataForm from '../../components/form/ThemeDataForm';
 import { useColorModeContext } from '../../context/ColorModeContext';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { SearchOutlined } from '@ant-design/icons';
+import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+const { confirm } = Modal;
 
 const ThemeData = () => {
   const [themeData, setThemeData] = useState([]);
@@ -29,6 +31,41 @@ const ThemeData = () => {
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [refetch, setRefetch] = useState(true);
+
+  // theme data delete confirmation modal
+  const showPromiseConfirm = (id: string) => {
+    const handleDelete = async () => {
+      try {
+        const response = await fetch(
+          `https://origin.assurify.app/api/admin/selectors/delete/${id}`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const data = response.json();
+        console.log(data);
+      } catch (error) {}
+    };
+
+    confirm({
+      title: 'Are you sure you want to delete this theme?',
+      icon: <ExclamationCircleFilled />,
+      content:
+        'Deleting this theme will remove all associated selectors and cannot be undone. Do you want to proceed?',
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: () => {
+        handleDelete;
+      },
+      onCancel() {
+        console.log('Theme deletion canceled.');
+      },
+    });
+  };
 
   interface DataType {
     key: string;
@@ -138,6 +175,7 @@ const ThemeData = () => {
             />
           </NavLink>
           <CustomButton
+            // onClick={showPromiseConfirm(key)}
             icon={<Trash className="w-4 h-4" />}
             aria-label="Delete"
             variant="danger"
