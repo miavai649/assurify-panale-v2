@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import {
-  Button,
   ConfigProvider,
   Input,
   InputRef,
@@ -29,6 +28,7 @@ const ThemeData = () => {
   const token = localStorage.getItem('accessToken');
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef<InputRef>(null);
+  const [refetch, setRefetch] = useState(true);
 
   interface DataType {
     key: string;
@@ -70,7 +70,9 @@ const ThemeData = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined
+        style={{ color: filtered ? '#3C50E0' : '#3C50E0', fontSize: 20 }}
+      />
     ),
     onFilter: (value, record) =>
       record['theme']
@@ -158,7 +160,7 @@ const ThemeData = () => {
         setThemeData(data?.rows);
         setLoading(false);
       });
-  }, []);
+  }, [refetch]);
 
   const data = themeData?.map((data: any) => {
     return {
@@ -207,7 +209,11 @@ const ThemeData = () => {
               },
             }}
           >
-            <CreateThemeDataForm defaultData={{}} />
+            <CreateThemeDataForm
+              defaultData={{}}
+              setRefetch={setRefetch}
+              refetch={refetch}
+            />
           </ConfigProvider>
         }
       />

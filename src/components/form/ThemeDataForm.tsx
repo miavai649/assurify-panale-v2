@@ -2,6 +2,7 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import CustomButton from '../CustomButton';
 import CustomInputField from './CustomInputField';
+import toast from 'react-hot-toast';
 
 interface ISelector {
   cart: string;
@@ -14,9 +15,17 @@ interface ICreateThemeDataForm {
     themeName?: string;
     selector?: ISelector[];
   };
+  setRefetch: (value: boolean) => void;
+  refetch: boolean;
 }
 
-const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
+const CreateThemeDataForm = ({
+  defaultData,
+  setRefetch,
+  refetch,
+}: ICreateThemeDataForm) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   // initial form state
   const initialFormState = {
     theme: defaultData?.themeName || '',
@@ -24,6 +33,8 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
       { cart: '', subTotal: '', checkOut: '' },
     ],
   };
+
+  const token = localStorage.getItem('accessToken');
 
   // form state
   const [form, setForm] = useState(initialFormState);
@@ -68,14 +79,39 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
 
   // handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
+    setIsLoading(true);
     e.preventDefault();
-    console.log('Form Data Submitted:', form);
     const formData = new FormData();
 
     formData.append('themeName', form.theme);
     formData.append('selectorJson', JSON.stringify(form.selector));
 
-    setForm(initialFormState);
+    try {
+      const response = await fetch(
+        'https://origin.assurify.app/api/admin/add-new-selector',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        },
+      );
+
+      const data = await response.json();
+
+      if (data) {
+        toast.success('New Theme Data Created Successfully');
+        setRefetch(!refetch);
+      }
+    } catch (error) {
+      console.log('👀 ~ handleSubmit ~ error:', error);
+
+      toast.error('Something Went Wrong');
+    } finally {
+      setIsLoading(false);
+      setForm(initialFormState);
+    }
   };
 
   return (
@@ -151,7 +187,11 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
           <span className="text-black dark:text-white">Add Field</span>
         </CustomButton>
 
-        <CustomButton type="submit" className="w-full sm:w-auto">
+        <CustomButton
+          type="submit"
+          isLoading={isLoading}
+          className="w-full sm:w-auto"
+        >
           Submit
         </CustomButton>
       </div>
