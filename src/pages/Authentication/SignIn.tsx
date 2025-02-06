@@ -25,6 +25,7 @@ const SignIn: React.FC = () => {
         data.email as string,
         data.password as string,
       );
+
       if (result && result.user) {
         const response = await fetch(
           'http://localhost:3000/api/v1/auth/login',

@@ -17,6 +17,7 @@ export const InstallationRequest = () => {
   const [loading, setLoading] = useState(true);
   const token = localStorage.getItem('accessToken');
 
+  // installation request table column
   const columns: TableColumnsType<any> = [
     {
       title: 'Shop',
@@ -102,6 +103,7 @@ export const InstallationRequest = () => {
     },
   ];
 
+  // fetching all installation request
   useEffect(() => {
     fetch('https://origin.assurify.app/api/admin/supports/get-all', {
       headers: {
@@ -115,6 +117,7 @@ export const InstallationRequest = () => {
       });
   }, []);
 
+  // configuring installation request data for showing them in the table
   const data = supports?.map((support: any) => {
     return {
       key: support?.id,

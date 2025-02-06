@@ -12,6 +12,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useColorModeContext } from '../../context/ColorModeContext';
 import SelectBox from '../../components/SelectBox';
 import CustomButton from '../../components/CustomButton';
+import Loader from '../../common/Loader';
 
 const { Title } = Typography;
 
@@ -38,6 +39,7 @@ const formats = [
   'image',
 ];
 
+// react quill modules for configuration
 const modules = {
   toolbar: {
     container: [
@@ -63,12 +65,15 @@ const SingleInstallationRequest = () => {
   const { state } = useColorModeContext();
   const { colorMode } = state;
 
+  const token = localStorage.getItem('accessToken');
+
   const { id } = useParams();
 
+  // dynamically fetching single installation request data
   useEffect(() => {
     fetch(`https://origin.assurify.app/api/admin/supports/view/${id}`, {
       headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBhc3N1cmlmeS5hcHAiLCJuYW1lIjoiU3VwZXIgQWRtaW4iLCJyb2xlIjoic3VwZXJfYWRtaW4iLCJpYXQiOjE3Mzg1NTkwNTksImV4cCI6MTczODY0NTQ1OX0.tyUSQKEuoNuin8UTbtw5XQLse2LpPo2y_tUuuBghswY`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
@@ -92,11 +97,7 @@ const SingleInstallationRequest = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
