@@ -121,7 +121,25 @@ const Promotions = () => {
   // generate key function
   const generateKeys = async () => {
     const formData = new FormData();
-    console.log(planId, count);
+    formData.append('plan_id', planId.toString());
+    formData.append('count', count.toString());
+
+    try {
+      const response = await fetch(
+        'https://origin.assurify.app/api/admin/promotions/generate',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        },
+      );
+      const data = await response.json();
+      console.log('👀 ~ generateKeys ~ data:', data);
+    } catch (error) {
+      console.log(error);
+    }
 
     setCount('');
     setPlanId('');
