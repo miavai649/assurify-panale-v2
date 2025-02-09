@@ -21,6 +21,7 @@ import { useColorModeContext } from '../../context/ColorModeContext';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import toast from 'react-hot-toast';
 const { confirm } = Modal;
 
 const ThemeData = () => {
@@ -34,22 +35,6 @@ const ThemeData = () => {
 
   // theme data delete confirmation modal
   const showPromiseConfirm = (id: string) => {
-    const handleDelete = async () => {
-      try {
-        const response = await fetch(
-          `https://origin.assurify.app/api/admin/selectors/delete/${id}`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const data = response.json();
-        console.log(data);
-      } catch (error) {}
-    };
-
     confirm({
       title: 'Are you sure you want to delete this theme?',
       icon: <ExclamationCircleFilled />,
@@ -58,15 +43,35 @@ const ThemeData = () => {
       okText: 'Delete',
       okType: 'danger',
       cancelText: 'Cancel',
-      onOk: () => {
-        handleDelete;
+      onOk: async () => {
+        try {
+          const response = await fetch(
+            `https://origin.assurify.app/api/admin/selectors/delete/${id}`,
+            {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+          const data = await response.json();
+          if (data?.success) {
+            setRefetch(!refetch);
+            toast.success('Theme data deleted successfully');
+          } else {
+            console.log(data);
+            toast.error('Something Went Wrong');
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error('Something Went Wrong');
+        }
       },
       onCancel() {
         console.log('Theme deletion canceled.');
       },
     });
   };
-
   interface DataType {
     key: string;
     name: string;
@@ -175,7 +180,7 @@ const ThemeData = () => {
             />
           </NavLink>
           <CustomButton
-            // onClick={showPromiseConfirm(key)}
+            onClick={() => showPromiseConfirm(key)}
             icon={<Trash className="w-4 h-4" />}
             aria-label="Delete"
             variant="danger"
