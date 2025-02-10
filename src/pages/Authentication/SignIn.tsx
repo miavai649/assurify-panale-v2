@@ -9,10 +9,12 @@ import {
 } from '../../firebase/auth';
 import toast from 'react-hot-toast';
 import CustomButton from '../../components/CustomButton';
+import useJwt from '../../hooks/useJwt';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { setJwt } = useJwt();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +40,8 @@ const SignIn: React.FC = () => {
           },
         );
         const accessToken = await response.json();
-        await localStorage.setItem('accessToken', accessToken.data);
+        // await localStorage.setItem('accessToken', accessToken.data);
+        setJwt(accessToken.data);
         toast.success('Logged in successfully');
         navigate('/');
         setIsLoading(false);

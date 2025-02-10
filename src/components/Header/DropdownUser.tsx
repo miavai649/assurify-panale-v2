@@ -4,9 +4,16 @@ import ClickOutside from '../ClickOutside';
 import UserOne from '../../images/user/user-01.png';
 import SvgIcon from '../Svg';
 import { doSignOut } from '../../firebase/auth';
+import useJwt from '../../hooks/useJwt';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { setJwt } = useJwt();
+
+  const handleSignout = () => {
+    doSignOut();
+    setJwt(null);
+  };
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -102,7 +109,7 @@ const DropdownUser = () => {
             </li>
           </ul>
           <button
-            onClick={doSignOut}
+            onClick={handleSignout}
             className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
           >
             <SvgIcon name="logout" />

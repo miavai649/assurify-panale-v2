@@ -19,7 +19,7 @@ import Loader from './common/Loader';
 
 function App() {
   const { pathname } = useLocation();
-  const { userLoggedIn, loading } = useAuth();
+  const { userLoggedIn, loading, jwt } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,7 +50,7 @@ function App() {
       />
 
       {/* Protected Routes (Inside DefaultLayout) */}
-      {userLoggedIn ? (
+      {userLoggedIn && jwt ? (
         <Route
           path="/*"
           element={

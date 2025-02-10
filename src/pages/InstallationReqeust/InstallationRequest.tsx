@@ -1,16 +1,26 @@
 import { TableColumnsType } from 'antd';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CustomTable from '../../components/Tables/CustomTable';
-import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
+import useQuery from '../../hooks/useQuery';
 
 export const InstallationRequest = () => {
-  const [supports, setSupports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem('accessToken');
+  interface RequestData {
+    rows: Array<{
+      id: string;
+      store: { url: string };
+      initiatedFor: string;
+      status: string;
+      createdAt: string;
+    }>;
+  }
+
+  const { data: requestsData, isLoading } = useQuery<RequestData>(
+    '/api/admin/supports/get-all',
+  );
 
   // installation request table column
   const columns: TableColumnsType<any> = [
@@ -78,22 +88,8 @@ export const InstallationRequest = () => {
     },
   ];
 
-  // fetching all installation request
-  useEffect(() => {
-    fetch('https://origin.assurify.app/api/admin/supports/get-all', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setSupports(data?.rows);
-        setLoading(false);
-      });
-  }, []);
-
   // configuring installation request data for showing them in the table
-  const data = supports?.map((support: any) => {
+  const data = requestsData?.rows?.map((support: any) => {
     return {
       key: support?.id,
       shop: support?.store?.url,
@@ -110,8 +106,8 @@ export const InstallationRequest = () => {
       <CustomTable
         columns={columns}
         tableSize="large"
-        data={data}
-        loading={loading}
+        data={data || []}
+        loading={isLoading}
       />
     </div>
   );
