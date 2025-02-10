@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
@@ -9,16 +9,21 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { ColorModeProvider } from './context/ColorModeContext';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/authContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Router>
-      <ColorModeProvider>
-        <AuthProvider>
-          <App />
-          <Toaster position="top-center" reverseOrder={false} />
-        </AuthProvider>
-      </ColorModeProvider>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <ColorModeProvider>
+          <AuthProvider>
+            <App />
+            <Toaster position="top-center" reverseOrder={false} />
+          </AuthProvider>
+        </ColorModeProvider>
+      </Router>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

@@ -15,6 +15,7 @@ import DefaultLayout from './layout/DefaultLayout';
 import { assurify_panel_routes as panelRoutes } from './routes';
 import { renderRoutes } from './lib/renderRoutes';
 import { useAuth } from './context/authContext';
+import Loader from './common/Loader';
 
 function App() {
   const { pathname } = useLocation();
@@ -24,7 +25,7 @@ function App() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  if (loading) return <div>Loading...</div>; // Prevents flickering
+  if (loading) return <Loader />; // Prevents flickering
 
   return (
     <Routes>
