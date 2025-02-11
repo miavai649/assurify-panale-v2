@@ -44,23 +44,11 @@ const ThemeData = () => {
   const token = localStorage.getItem('accessToken');
 
   // query and mutation
-  const { data: themeData, isLoading } = useQuery<{ rows: DataType[] }>(
-    '/api/admin/get-selectors',
-  );
-  console.log('👀 ~ ThemeData ~ themesData:', { themeData, isLoading });
-
-  // useEffect(() => {
-  //   fetch('https://origin.assurify.app/api/admin/get-selectors', {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setThemeData(data?.rows);
-  //       setLoading(false);
-  //     });
-  // }, [refetch]);
+  const {
+    data: themeData,
+    isLoading,
+    refetch,
+  } = useQuery<{ rows: DataType[] }>('/api/admin/get-selectors');
 
   // theme data delete confirmation modal
   const showPromiseConfirm = (id: string) => {
@@ -216,6 +204,7 @@ const ThemeData = () => {
     },
   ];
 
+  // configure themeData for showing proper data in the table
   const data = themeData?.rows?.map((data: any) => {
     return {
       key: data?.id,
@@ -226,6 +215,7 @@ const ThemeData = () => {
     };
   });
 
+  // theme context
   const { state } = useColorModeContext();
   const { colorMode } = state;
 
@@ -263,7 +253,11 @@ const ThemeData = () => {
               },
             }}
           >
-            <CreateThemeDataForm defaultData={{}} />
+            <CreateThemeDataForm
+              defaultData={{}}
+              refetch={refetch}
+              setModalState={setAddNewThemeModal}
+            />
           </ConfigProvider>
         }
       />

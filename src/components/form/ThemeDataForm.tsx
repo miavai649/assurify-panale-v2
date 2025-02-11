@@ -1,13 +1,24 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import useMutation from '../../hooks/useMutation';
 import CustomButton from '../CustomButton';
 import CustomInputField from './CustomInputField';
 
+// type declaration
 interface ISelector {
   cart: string;
   subTotal: string;
   checkOut: string;
+}
+
+interface DataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  theme: string;
 }
 
 interface ICreateThemeDataForm {
@@ -15,11 +26,22 @@ interface ICreateThemeDataForm {
     themeName?: string;
     selector?: ISelector[];
   };
+  refetch: (options?: RefetchOptions) => Promise<
+    QueryObserverResult<
+      {
+        rows: DataType[];
+      },
+      Error
+    >
+  >;
+  setModalState?: (state: boolean) => void;
 }
 
-const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
-  const [isLoading, setIsLoading] = useState(false);
-
+const CreateThemeDataForm = ({
+  defaultData,
+  refetch,
+  setModalState,
+}: ICreateThemeDataForm) => {
   // initial form state
   const initialFormState = {
     theme: defaultData?.themeName || '',
@@ -28,11 +50,13 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
     ],
   };
 
-  const token = localStorage.getItem('accessToken');
-
   // form state
   const [form, setForm] = useState(initialFormState);
 
+  // mutation
+  const { mutateAsync, isPending } = useMutation('/api/admin/add-new-selector');
+
+  // setting default data for update theme data
   useEffect(() => {
     if (defaultData?.selector) {
       setForm({
@@ -46,6 +70,7 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
     }
   }, [defaultData]);
 
+  // handle input change function
   const handleInputChange = (
     index: number,
     field: keyof ISelector,
@@ -71,39 +96,22 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
     setForm({ ...form, selector: updatedSelector });
   };
 
-  // handle form submission
+  // handle form submission for creating new theme data
   const handleSubmit = async (e: React.FormEvent) => {
-    setIsLoading(true);
     e.preventDefault();
     const formData = new FormData();
 
     formData.append('themeName', form.theme);
     formData.append('selectorJson', JSON.stringify(form.selector));
 
-    try {
-      const response = await fetch(
-        'https://origin.assurify.app/api/admin/add-new-selector',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        },
-      );
+    await mutateAsync(formData);
+    toast.success('New Theme Data Created Successfully');
 
-      const data = await response.json();
+    // refetching theme data after successfully created theme data
+    refetch();
 
-      if (data) {
-        toast.success('New Theme Data Created Successfully');
-      }
-    } catch (error) {
-      console.log('👀 ~ handleSubmit ~ error:', error);
-
-      toast.error('Something Went Wrong');
-    } finally {
-      setIsLoading(false);
-      setForm(initialFormState);
+    if (setModalState) {
+      setModalState(false);
     }
   };
 
@@ -182,7 +190,7 @@ const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
 
         <CustomButton
           type="submit"
-          isLoading={isLoading}
+          isLoading={isPending}
           className="w-full sm:w-auto"
         >
           Submit
