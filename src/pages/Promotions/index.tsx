@@ -1,12 +1,13 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { TableColumnsType } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CustomButton from '../../components/CustomButton';
 import SelectBox from '../../components/SelectBox';
 import CustomTable from '../../components/Tables/CustomTable';
 import CustomInputField from '../../components/form/CustomInputField';
+import useMutation from '../../hooks/useMutation';
 import useQuery from '../../hooks/useQuery';
 
 interface Promotions {
@@ -17,36 +18,27 @@ interface Promotions {
   updatedAt: Date;
 }
 
+interface Plans {
+  id: number;
+  name: string;
+  price: number;
+}
+
 const Promotions = () => {
   // local state
   const [planId, setPlanId] = useState<number | string>('');
   const [count, setCount] = useState<number | string>('');
-  const [loading, setLoading] = useState(true);
-
-  const [plans, setPlans] = useState<
-    { id: number; name: string; price: number }[]
-  >([]);
-  const [promotions, setPromotions] = useState<Promotions[]>([]);
-  console.log('👀 ~ Promotions ~ promotions:', promotions);
-  const token = localStorage.getItem('accessToken');
 
   // query and mutation
-  const { data, isLoading, refetch } = useQuery(
-    '/api/admin/promotions/get-all',
+  const {
+    data: promotions,
+    isLoading,
+    refetch,
+  } = useQuery('/api/admin/promotions/get-all');
+  const { data: plans } = useQuery('/api/admin/plans');
+  const { isPending, mutateAsync } = useMutation(
+    `/api/admin/promotions/generate`,
   );
-  console.log('👀 ~ Promotions ~ data:', data);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setPromotions(
-        (data as Promotions[])?.map((promotion) => ({
-          ...promotion,
-          updatedAt: new Date(promotion?.updatedAt),
-        })),
-      );
-    };
-    fetchData();
-  }, [data]);
 
   // promotions table column
   const columns: TableColumnsType<any> = [
@@ -92,22 +84,8 @@ const Promotions = () => {
     },
   ];
 
-  // fetching plans data
-  useEffect(() => {
-    fetch('https://origin.assurify.app/api/admin/plans', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPlans(data);
-        setLoading(false);
-      });
-  }, []);
-
   // configuring data for showing in the table
-  const tableData = promotions?.map((promotion: any) => {
+  const tableData = (promotions as Promotions[])?.map((promotion: any) => {
     return {
       key: promotion?.id,
       id: promotion?.id,
@@ -122,7 +100,7 @@ const Promotions = () => {
   const downloadCsv = () => {
     const keys: string[] = [];
 
-    promotions.forEach((promotion: any) => {
+    (promotions as Promotions[]).forEach((promotion: any) => {
       keys.push(promotion.key);
     });
 
@@ -142,7 +120,7 @@ const Promotions = () => {
   };
 
   // select plan options
-  const options = plans
+  const options = (plans as Plans[])
     ?.filter((plan) => plan?.price == 0)
     .map((plan) => ({ value: plan?.id, label: plan?.name }));
 
@@ -152,23 +130,24 @@ const Promotions = () => {
     formData.append('plan_id', planId.toString());
     formData.append('count', count.toString());
 
-    try {
-      const response = await fetch(
-        'https://origin.assurify.app/api/admin/promotions/generate',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        },
-      );
-      const data = await response.json();
-      console.log('👀 ~ generateKeys ~ data:', data);
-    } catch (error) {
-      console.log(error);
-    }
-
+    await mutateAsync(formData);
+    // try {
+    //   const response = await fetch(
+    //     'https://origin.assurify.app/api/admin/promotions/generate',
+    //     {
+    //       method: 'POST',
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //       body: JSON.stringify(formData),
+    //     },
+    //   );
+    //   const data = await response.json();
+    //   console.log('👀 ~ generateKeys ~ data:', data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    await refetch();
     setCount('');
     setPlanId('');
     toast.success('Successfully created!');
@@ -191,7 +170,12 @@ const Promotions = () => {
           onChange={(e) => setCount(e.target.value)}
           type="number"
         />
-        <CustomButton size="md" onClick={generateKeys} className="col-span-2 ">
+        <CustomButton
+          size="md"
+          onClick={generateKeys}
+          isLoading={isPending}
+          className="col-span-2 "
+        >
           Generate Key
         </CustomButton>
       </div>
