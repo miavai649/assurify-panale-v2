@@ -10,6 +10,7 @@ import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
 import SelectBox from '../../components/SelectBox';
 import { useColorModeContext } from '../../context/ColorModeContext';
+import useMutation from '../../hooks/useMutation';
 import useQuery from '../../hooks/useQuery';
 
 const { Title } = Typography;
@@ -57,55 +58,33 @@ const modules = {
 };
 
 const SingleInstallationRequest = () => {
-  const [loading, setLoading] = useState(false);
+  // local states
   const [status, setStatus] = useState('');
   const [value, setValue] = useState('');
 
   const { id } = useParams();
+
+  // theme context
   const { state } = useColorModeContext();
   const { colorMode } = state;
 
+  // query and mutation
   const {
     data: singleSupportRequestData,
     isLoading,
     isFetched,
   } = useQuery<RequestData>(`/api/admin/supports/view/${id}`);
-
-  const token = localStorage.getItem('accessToken');
+  const { mutateAsync } = useMutation(`/api/admin/supports/update/${id}`);
 
   // submit function for report and status submit
   const handleSubmit = async () => {
-    try {
-      setLoading(true);
-      const formData = new FormData();
+    const formData = new FormData();
 
-      formData.append('reportContent', value);
-      formData.append('status', status);
+    formData.append('reportContent', value);
+    formData.append('status', status);
 
-      const response = await fetch(
-        `https://origin.assurify.app/api/admin/supports/update/${id}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        },
-      );
-      const data = await response.json();
-
-      if (data.success) {
-        toast.success('Installation Request Updated Successfully');
-        setLoading(false);
-      } else {
-        toast.error(data.error);
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      toast.error('Something Went Wrong');
-      setLoading(false);
-    }
+    await mutateAsync(formData);
+    toast.success('Successfully updated!');
   };
 
   // status options
@@ -117,6 +96,7 @@ const SingleInstallationRequest = () => {
     { value: 'cancelled', label: 'Cancelled' },
   ];
 
+  // setting the default value for react quill and status select box
   useEffect(() => {
     if (isFetched && singleSupportRequestData) {
       setStatus(singleSupportRequestData.status || '');
