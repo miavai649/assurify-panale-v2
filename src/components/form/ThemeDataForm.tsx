@@ -35,12 +35,14 @@ interface ICreateThemeDataForm {
     >
   >;
   setModalState?: (state: boolean) => void;
+  id?: string;
 }
 
 const CreateThemeDataForm = ({
   defaultData,
   refetch,
   setModalState,
+  id,
 }: ICreateThemeDataForm) => {
   // initial form state
   const initialFormState = {
@@ -55,6 +57,10 @@ const CreateThemeDataForm = ({
 
   // mutation
   const { mutateAsync, isPending } = useMutation('/api/admin/add-new-selector');
+
+  const { mutateAsync: updateThemeData } = useMutation(
+    `/api/admin/selectors/update/${id}`,
+  );
 
   // setting default data for update theme data
   useEffect(() => {
@@ -99,20 +105,22 @@ const CreateThemeDataForm = ({
   // handle form submission for creating new theme data
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData();
 
-    formData.append('themeName', form.theme);
-    formData.append('selectorJson', JSON.stringify(form.selector));
-
-    await mutateAsync(formData);
-    toast.success('New Theme Data Created Successfully');
-
-    // refetching theme data after successfully created theme data
-
+    // checking for creating theme data or updating a existing theme data
     if (setModalState && refetch) {
+      const formData = new FormData();
+      formData.append('themeName', form.theme);
+      formData.append('selectorJson', JSON.stringify(form.selector));
+      await mutateAsync(formData);
       refetch();
       setForm(initialFormState);
       setModalState(false);
+      toast.success('New Theme Data Created Successfully');
+    } else {
+      const formData = new FormData();
+      formData.append('selectorJson', JSON.stringify(form.selector));
+      await updateThemeData(formData);
+      toast.success('Successfully updated theme data');
     }
   };
 
@@ -123,6 +131,7 @@ const CreateThemeDataForm = ({
           label="Theme"
           type="text"
           size="sm"
+          isDisabled={id ? true : false}
           placeholder="Enter theme"
           value={form.theme}
           onChange={(e) => setForm({ ...form, theme: e.target.value })}

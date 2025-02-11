@@ -12,6 +12,7 @@ interface InputFieldProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   labelContent?: ReactNode;
+  isDisabled?: boolean;
 }
 
 const CustomInputField: React.FC<InputFieldProps> = ({
@@ -25,6 +26,7 @@ const CustomInputField: React.FC<InputFieldProps> = ({
   onChange,
   name,
   labelContent,
+  isDisabled = false,
 }) => {
   const sizeClasses = {
     sm: 'py-2 pl-4 pr-8 text-sm',
@@ -45,6 +47,7 @@ const CustomInputField: React.FC<InputFieldProps> = ({
       <div className="relative">
         <input
           type={type}
+          disabled={isDisabled}
           name={name}
           placeholder={placeholder}
           value={value}
