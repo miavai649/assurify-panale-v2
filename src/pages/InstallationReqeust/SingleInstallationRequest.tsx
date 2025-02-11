@@ -1,24 +1,26 @@
 import { Card, Flex, Typography } from 'antd';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useColorModeContext } from '../../context/ColorModeContext';
-import SelectBox from '../../components/SelectBox';
-import CustomButton from '../../components/CustomButton';
+import { useParams } from 'react-router-dom';
 import Loader from '../../common/Loader';
+import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
-import toast from 'react-hot-toast';
+import SelectBox from '../../components/SelectBox';
+import { useColorModeContext } from '../../context/ColorModeContext';
+import useQuery from '../../hooks/useQuery';
 
 const { Title } = Typography;
 
-interface SupportData {
+interface RequestData {
   store?: { url: string };
   themeName?: string;
   initiatedFor?: string;
   status?: 'pending' | 'in_progress' | 'resolved' | 'cancelled';
   createdAt?: string;
+  reportContent?: string;
 }
 
 // options available for the text editor
@@ -55,38 +57,21 @@ const modules = {
 };
 
 const SingleInstallationRequest = () => {
-  const [support, setSupport] = useState<SupportData | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
-
   const [value, setValue] = useState('');
+
+  const { id } = useParams();
   const { state } = useColorModeContext();
   const { colorMode } = state;
 
+  const {
+    data: singleSupportRequestData,
+    isLoading,
+    isFetched,
+  } = useQuery<RequestData>(`/api/admin/supports/view/${id}`);
+
   const token = localStorage.getItem('accessToken');
-
-  const { id } = useParams();
-
-  // dynamically fetching single installation request data
-  useEffect(() => {
-    setLoading(true);
-    fetch(`https://origin.assurify.app/api/admin/supports/view/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setSupport(data);
-        setStatus(data?.status);
-        setLoading(false);
-        setValue(data?.reportContent || null);
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-        setLoading(false);
-      });
-  }, [id]);
 
   // submit function for report and status submit
   const handleSubmit = async () => {
@@ -132,7 +117,14 @@ const SingleInstallationRequest = () => {
     { value: 'cancelled', label: 'Cancelled' },
   ];
 
-  if (loading) {
+  useEffect(() => {
+    if (isFetched && singleSupportRequestData) {
+      setStatus(singleSupportRequestData.status || '');
+      setValue(singleSupportRequestData.reportContent || '');
+    }
+  }, [isFetched, singleSupportRequestData]);
+
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -153,12 +145,12 @@ const SingleInstallationRequest = () => {
               Store:
             </span>
             <a
-              href={`https://${support?.store?.url}`}
+              href={`https://${singleSupportRequestData?.store?.url}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline"
             >
-              {support?.store?.url}
+              {singleSupportRequestData?.store?.url}
             </a>
           </div>
 
@@ -167,7 +159,7 @@ const SingleInstallationRequest = () => {
               Theme:
             </span>
             <span className="text-gray-800 dark:text-gray-200">
-              {support?.themeName || 'N/A'}
+              {singleSupportRequestData?.themeName || 'N/A'}
             </span>
           </div>
 
@@ -176,7 +168,7 @@ const SingleInstallationRequest = () => {
               Service:
             </span>
             <span className="text-gray-800 dark:text-gray-200">
-              {support?.initiatedFor || 'N/A'}
+              {singleSupportRequestData?.initiatedFor || 'N/A'}
             </span>
           </div>
 
@@ -184,7 +176,9 @@ const SingleInstallationRequest = () => {
             <span className="font-bold text-gray-600 dark:text-gray-300">
               Status:
             </span>
-            <CustomStatusTag status={support?.status as string} />
+            <CustomStatusTag
+              status={singleSupportRequestData?.status as string}
+            />
           </div>
 
           <div className="flex items-center justify-between">
@@ -192,8 +186,10 @@ const SingleInstallationRequest = () => {
               Date:
             </span>
             <span className="text-gray-800 dark:text-gray-200">
-              {support?.createdAt
-                ? new Date(support.createdAt).toLocaleDateString('en-US', {
+              {singleSupportRequestData?.createdAt
+                ? new Date(
+                    singleSupportRequestData.createdAt,
+                  ).toLocaleDateString('en-US', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
@@ -225,7 +221,7 @@ const SingleInstallationRequest = () => {
             <SelectBox
               options={options}
               defaultValue={options.find(
-                (options) => options.value === support?.status,
+                (options) => options.value === singleSupportRequestData?.status,
               )}
               placeholder="Select a status"
               onChange={(value) => setStatus(value as string)}

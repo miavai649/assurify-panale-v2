@@ -1,23 +1,24 @@
 import { TableColumnsType } from 'antd';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import CustomTable from '../../components/Tables/CustomTable';
-import { NavLink } from 'react-router-dom';
 import { Eye } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
+import CustomTable from '../../components/Tables/CustomTable';
 import useQuery from '../../hooks/useQuery';
 
-export const InstallationRequest = () => {
-  interface RequestData {
-    rows: Array<{
-      id: string;
-      store: { url: string };
-      initiatedFor: string;
-      status: string;
-      createdAt: string;
-    }>;
-  }
+interface RequestData {
+  rows: Array<{
+    id: string;
+    store: { url: string };
+    initiatedFor: string;
+    status: string;
+    createdAt: string;
+  }>;
+}
 
+export const InstallationRequest = () => {
+  // fetching the installation requests data
   const { data: requestsData, isLoading } = useQuery<RequestData>(
     '/api/admin/supports/get-all',
   );
