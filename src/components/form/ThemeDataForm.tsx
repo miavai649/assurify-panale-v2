@@ -1,8 +1,8 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import CustomButton from '../CustomButton';
 import CustomInputField from './CustomInputField';
-import toast from 'react-hot-toast';
 
 interface ISelector {
   cart: string;
@@ -15,15 +15,9 @@ interface ICreateThemeDataForm {
     themeName?: string;
     selector?: ISelector[];
   };
-  setRefetch: (value: boolean) => void;
-  refetch: boolean;
 }
 
-const CreateThemeDataForm = ({
-  defaultData,
-  setRefetch,
-  refetch,
-}: ICreateThemeDataForm) => {
+const CreateThemeDataForm = ({ defaultData }: ICreateThemeDataForm) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // initial form state
@@ -102,7 +96,6 @@ const CreateThemeDataForm = ({
 
       if (data) {
         toast.success('New Theme Data Created Successfully');
-        setRefetch(!refetch);
       }
     } catch (error) {
       console.log('👀 ~ handleSubmit ~ error:', error);

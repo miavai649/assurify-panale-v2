@@ -1,5 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import {
   ConfigProvider,
   Input,
@@ -9,29 +7,60 @@ import {
   TableColumnsType,
   TableColumnType,
 } from 'antd';
+import { useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 
-import CustomButton from '../../components/CustomButton';
-import { Eye, Trash } from 'lucide-react';
-import CustomTable from '../../components/Tables/CustomTable';
-import CustomModal from '../../components/modal';
-import { DiamondPlus } from 'lucide-react';
-import CreateThemeDataForm from '../../components/form/ThemeDataForm';
-import { useColorModeContext } from '../../context/ColorModeContext';
-import { FilterDropdownProps } from 'antd/es/table/interface';
 import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import { DiamondPlus, Eye, Trash } from 'lucide-react';
 import Highlighter from 'react-highlight-words';
 import toast from 'react-hot-toast';
+import CustomButton from '../../components/CustomButton';
+import CustomTable from '../../components/Tables/CustomTable';
+import CreateThemeDataForm from '../../components/form/ThemeDataForm';
+import CustomModal from '../../components/modal';
+import { useColorModeContext } from '../../context/ColorModeContext';
+import useQuery from '../../hooks/useQuery';
 const { confirm } = Modal;
 
+// type declaration
+interface DataType {
+  key: string;
+  name: string;
+  age: number;
+  address: string;
+  theme: string;
+}
+
 const ThemeData = () => {
-  const [themeData, setThemeData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // local states
   const [addNewThemeModal, setAddNewThemeModal] = useState(false);
-  const token = localStorage.getItem('accessToken');
   const [searchText, setSearchText] = useState('');
+  // const [refetch, setRefetch] = useState(true);
+
   const searchInput = useRef<InputRef>(null);
-  const [refetch, setRefetch] = useState(true);
+
+  const token = localStorage.getItem('accessToken');
+
+  // query and mutation
+  const { data: themeData, isLoading } = useQuery<{ rows: DataType[] }>(
+    '/api/admin/get-selectors',
+  );
+  console.log('👀 ~ ThemeData ~ themesData:', { themeData, isLoading });
+
+  // useEffect(() => {
+  //   fetch('https://origin.assurify.app/api/admin/get-selectors', {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setThemeData(data?.rows);
+  //       setLoading(false);
+  //     });
+  // }, [refetch]);
 
   // theme data delete confirmation modal
   const showPromiseConfirm = (id: string) => {
@@ -56,7 +85,6 @@ const ThemeData = () => {
           );
           const data = await response.json();
           if (data?.success) {
-            setRefetch(!refetch);
             toast.success('Theme data deleted successfully');
           } else {
             console.log(data);
@@ -72,14 +100,8 @@ const ThemeData = () => {
       },
     });
   };
-  interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    theme: string;
-  }
 
+  // search by theme name in the table functionality start
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
@@ -131,7 +153,9 @@ const ThemeData = () => {
       />
     ),
   });
+  // search by theme name in the table functionality end
 
+  // theme data table columns
   const columns: TableColumnsType<any> = [
     {
       title: 'Theme',
@@ -192,20 +216,7 @@ const ThemeData = () => {
     },
   ];
 
-  useEffect(() => {
-    fetch('https://origin.assurify.app/api/admin/get-selectors', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setThemeData(data?.rows);
-        setLoading(false);
-      });
-  }, [refetch]);
-
-  const data = themeData?.map((data: any) => {
+  const data = themeData?.rows?.map((data: any) => {
     return {
       key: data?.id,
       theme: data?.themeName,
@@ -252,11 +263,7 @@ const ThemeData = () => {
               },
             }}
           >
-            <CreateThemeDataForm
-              defaultData={{}}
-              setRefetch={setRefetch}
-              refetch={refetch}
-            />
+            <CreateThemeDataForm defaultData={{}} />
           </ConfigProvider>
         }
       />
@@ -266,8 +273,8 @@ const ThemeData = () => {
         <CustomTable
           columns={columns}
           tableSize="large"
-          data={data}
-          loading={loading}
+          data={data || []}
+          loading={isLoading}
         />
       </div>
     </div>
