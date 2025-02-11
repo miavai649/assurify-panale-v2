@@ -1,41 +1,26 @@
-import { ConfigProvider, Spin } from 'antd';
-import { useEffect, useState } from 'react';
+import { ConfigProvider } from 'antd';
 import { useParams } from 'react-router-dom';
-import { useColorModeContext } from '../../context/ColorModeContext';
+import Loader from '../../common/Loader';
 import CreateThemeDataForm from '../../components/form/ThemeDataForm';
+import { useColorModeContext } from '../../context/ColorModeContext';
+import useQuery from '../../hooks/useQuery';
 
 const SingleThemeData = () => {
-  const [themeData, setThemeData] = useState({});
-  const [loading, setLoading] = useState(false);
+  // local state
   const { id } = useParams();
   const { state } = useColorModeContext();
   const { colorMode } = state;
-  const token = localStorage.getItem('accessToken');
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(`https://origin.assurify.app/api/admin/selectors/view/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setThemeData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-        setLoading(false);
-      });
-  }, [id]);
+  const {
+    data: themeData,
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
+    isLoading,
+  } = useQuery<{ themeName?: string; selector?: any }>(
+    `/api/admin/selectors/view/${id}`,
+  );
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (

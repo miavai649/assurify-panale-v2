@@ -26,7 +26,7 @@ interface ICreateThemeDataForm {
     themeName?: string;
     selector?: ISelector[];
   };
-  refetch: (options?: RefetchOptions) => Promise<
+  refetch?: (options?: RefetchOptions) => Promise<
     QueryObserverResult<
       {
         rows: DataType[];
@@ -108,9 +108,10 @@ const CreateThemeDataForm = ({
     toast.success('New Theme Data Created Successfully');
 
     // refetching theme data after successfully created theme data
-    refetch();
 
-    if (setModalState) {
+    if (setModalState && refetch) {
+      refetch();
+      setForm(initialFormState);
       setModalState(false);
     }
   };
