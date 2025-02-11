@@ -21,6 +21,7 @@ import CustomTable from '../../components/Tables/CustomTable';
 import CreateThemeDataForm from '../../components/form/ThemeDataForm';
 import CustomModal from '../../components/modal';
 import { useColorModeContext } from '../../context/ColorModeContext';
+import useMutation from '../../hooks/useMutation';
 import useQuery from '../../hooks/useQuery';
 const { confirm } = Modal;
 
@@ -33,25 +34,18 @@ interface DataType {
   theme: string;
 }
 
-const ThemeData = () => {
-  // local states
-  const [addNewThemeModal, setAddNewThemeModal] = useState(false);
-  const [searchText, setSearchText] = useState('');
-  // const [refetch, setRefetch] = useState(true);
+// delete theme data button component
+const DeleteThemeButton = ({ id, refetch }: { id: string; refetch: any }) => {
+  const { mutateAsync } = useMutation(`/api/admin/selectors/delete/${id}`);
 
-  const searchInput = useRef<InputRef>(null);
-
-  const token = localStorage.getItem('accessToken');
-
-  // query and mutation
-  const {
-    data: themeData,
-    isLoading,
-    refetch,
-  } = useQuery<{ rows: DataType[] }>('/api/admin/get-selectors');
+  const handleDelete = async () => {
+    await mutateAsync(undefined);
+    refetch();
+    toast.success('Theme data deleted successfully');
+  };
 
   // theme data delete confirmation modal
-  const showPromiseConfirm = (id: string) => {
+  const showPromiseConfirm = () => {
     confirm({
       title: 'Are you sure you want to delete this theme?',
       icon: <ExclamationCircleFilled />,
@@ -60,34 +54,41 @@ const ThemeData = () => {
       okText: 'Delete',
       okType: 'danger',
       cancelText: 'Cancel',
-      onOk: async () => {
-        try {
-          const response = await fetch(
-            `https://origin.assurify.app/api/admin/selectors/delete/${id}`,
-            {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            },
-          );
-          const data = await response.json();
-          if (data?.success) {
-            toast.success('Theme data deleted successfully');
-          } else {
-            console.log(data);
-            toast.error('Something Went Wrong');
-          }
-        } catch (error) {
-          console.log(error);
-          toast.error('Something Went Wrong');
-        }
+      onOk() {
+        handleDelete();
       },
       onCancel() {
-        console.log('Theme deletion canceled.');
+        toast.error('Delete theme data cancelled');
       },
     });
   };
+
+  return (
+    <CustomButton
+      onClick={showPromiseConfirm}
+      icon={<Trash className="w-4 h-4" />}
+      aria-label="Delete"
+      variant="danger"
+      isIconOnly
+      size="sm"
+    />
+  );
+};
+
+const ThemeData = () => {
+  // local states
+  const [addNewThemeModal, setAddNewThemeModal] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  // const [refetch, setRefetch] = useState(true);
+
+  const searchInput = useRef<InputRef>(null);
+
+  // query and mutation
+  const {
+    data: themeData,
+    isLoading,
+    refetch,
+  } = useQuery<{ rows: DataType[] }>('/api/admin/get-selectors');
 
   // search by theme name in the table functionality start
   const handleSearch = (
@@ -191,14 +192,7 @@ const ThemeData = () => {
               size="sm"
             />
           </NavLink>
-          <CustomButton
-            onClick={() => showPromiseConfirm(key)}
-            icon={<Trash className="w-4 h-4" />}
-            aria-label="Delete"
-            variant="danger"
-            isIconOnly
-            size="sm"
-          />
+          <DeleteThemeButton id={key} refetch={refetch} />
         </div>
       ),
     },

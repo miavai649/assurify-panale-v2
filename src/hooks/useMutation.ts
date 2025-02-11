@@ -9,7 +9,7 @@ interface UseMutationOptions {
 const useMutation = (url: string, options: UseMutationOptions = {}) => {
   const { method = 'POST', mutationOptions = {} } = options;
   const { fetchQuery } = useAppQuery();
-  const mutationFunction = async (input: FormData) => {
+  const mutationFunction = async (input?: FormData) => {
     try {
       await fetchQuery(url, {
         method,
@@ -21,7 +21,7 @@ const useMutation = (url: string, options: UseMutationOptions = {}) => {
   };
   return useTanMutation({
     mutationKey: [url],
-    mutationFn: (input: FormData) => mutationFunction(input),
+    mutationFn: (input?: FormData) => mutationFunction(input),
     ...mutationOptions,
   });
 };
