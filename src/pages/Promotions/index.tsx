@@ -1,22 +1,52 @@
+import { DownloadOutlined } from '@ant-design/icons';
 import { TableColumnsType } from 'antd';
 import { useEffect, useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import CustomTable from '../../components/Tables/CustomTable';
-import CustomButton from '../../components/CustomButton';
-import { DownloadOutlined } from '@ant-design/icons';
 import toast from 'react-hot-toast';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import CustomButton from '../../components/CustomButton';
 import SelectBox from '../../components/SelectBox';
+import CustomTable from '../../components/Tables/CustomTable';
 import CustomInputField from '../../components/form/CustomInputField';
+import useQuery from '../../hooks/useQuery';
+
+interface Promotions {
+  id: number;
+  key: string;
+  planId: number;
+  usedAt: Date;
+  updatedAt: Date;
+}
 
 const Promotions = () => {
+  // local state
   const [planId, setPlanId] = useState<number | string>('');
   const [count, setCount] = useState<number | string>('');
   const [loading, setLoading] = useState(true);
-  const [promotions, setPromotions] = useState<any[]>([]);
+
   const [plans, setPlans] = useState<
     { id: number; name: string; price: number }[]
   >([]);
+  const [promotions, setPromotions] = useState<Promotions[]>([]);
+  console.log('👀 ~ Promotions ~ promotions:', promotions);
   const token = localStorage.getItem('accessToken');
+
+  // query and mutation
+  const { data, isLoading, refetch } = useQuery(
+    '/api/admin/promotions/get-all',
+  );
+  console.log('👀 ~ Promotions ~ data:', data);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setPromotions(
+        (data as Promotions[])?.map((promotion) => ({
+          ...promotion,
+          updatedAt: new Date(promotion?.updatedAt),
+        })),
+      );
+    };
+    fetchData();
+  }, [data]);
 
   // promotions table column
   const columns: TableColumnsType<any> = [
@@ -36,7 +66,19 @@ const Promotions = () => {
     {
       title: 'Used At',
       dataIndex: 'usedAt',
-      render: (usedAt: string) => <p>{usedAt ? 'Used' : 'Not Used'}</p>,
+      render: (usedAt: string) => {
+        return usedAt ? (
+          <p>
+            {new Date(usedAt).toLocaleDateString('en-US', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            })}
+          </p>
+        ) : (
+          <p>Not Used</p>
+        );
+      },
     },
     {
       title: 'Updated At',
@@ -49,20 +91,6 @@ const Promotions = () => {
         }),
     },
   ];
-
-  // fetching promotions data
-  useEffect(() => {
-    fetch('https://origin.assurify.app/api/admin/promotions/get-all', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setPromotions(data);
-        setLoading(false);
-      });
-  }, []);
 
   // fetching plans data
   useEffect(() => {
@@ -79,7 +107,7 @@ const Promotions = () => {
   }, []);
 
   // configuring data for showing in the table
-  const data = promotions?.map((promotion: any) => {
+  const tableData = promotions?.map((promotion: any) => {
     return {
       key: promotion?.id,
       id: promotion?.id,
@@ -173,11 +201,11 @@ const Promotions = () => {
       </CustomButton>
 
       <CustomTable
-        tableTitle={`Total ${data?.length} keys`}
+        tableTitle={`Total ${tableData?.length} keys`}
         columns={columns}
         tableSize="large"
-        data={data}
-        loading={loading}
+        data={tableData}
+        loading={isLoading}
       />
     </div>
   );
