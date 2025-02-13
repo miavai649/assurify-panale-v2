@@ -3,6 +3,7 @@ import { InstallationRequest } from '../pages/InstallationReqeust/InstallationRe
 import SingleInstallationRequest from '../pages/InstallationReqeust/SingleInstallationRequest';
 import Promotions from '../pages/Promotions';
 import Stores from '../pages/stores';
+import SingleStoreDetailsPage from '../pages/stores/SingleStoreDetailsPage';
 import ThemeData from '../pages/ThemeData';
 import SingleThemeData from '../pages/ThemeData/SingleThemeData';
 
@@ -54,7 +55,14 @@ export const assurify_panel_routes = [
     navigateLink: 'stores',
     iconName: 'stores',
     title: 'Stores',
-    pageTitle: 'Stores | Assurify Stores',
+    pageTitle: 'Stores Data | Assurify Stores',
     element: <Stores />,
+    children: [
+      {
+        navigateLink: 'stores/view/:id',
+        pageTitle: 'Stores Data | Assurify Single Stores Details',
+        element: <SingleStoreDetailsPage />,
+      },
+    ],
   },
 ];

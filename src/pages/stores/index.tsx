@@ -1,6 +1,9 @@
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { TableColumnsType } from 'antd';
+import { Eye } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
 import CustomTable from '../../components/Tables/CustomTable';
 import { formatDate } from '../../lib/formatDate';
@@ -71,6 +74,22 @@ const Stores = () => {
       title: 'Installed At',
       dataIndex: 'installedAt',
       render: (installedAt: string) => formatDate(installedAt),
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'key',
+      key: 'view',
+      render: (key) => (
+        <NavLink to={`/stores/view/1`}>
+          <CustomButton
+            icon={<Eye className="w-4 h-4" />}
+            aria-label="View"
+            variant="primary"
+            isIconOnly
+            size="sm"
+          />
+        </NavLink>
+      ),
     },
   ];
 
