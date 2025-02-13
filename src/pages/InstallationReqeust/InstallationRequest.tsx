@@ -1,3 +1,9 @@
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+  SyncOutlined,
+} from '@ant-design/icons';
 import { TableColumnsType } from 'antd';
 import { Eye } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
@@ -17,11 +23,45 @@ interface RequestData {
   }>;
 }
 
+type StatusType = 'pending' | 'in_progress' | 'resolved' | 'cancelled' | 'open';
+
 export const InstallationRequest = () => {
   // fetching the installation requests data
   const { data: requestsData, isLoading } = useQuery<RequestData>(
     '/api/admin/supports/get-all',
   );
+
+  // installation status mapping object
+  const statusMapping: Record<
+    StatusType,
+    { label: string; icon: JSX.Element; color: string }
+  > = {
+    pending: {
+      label: 'Pending',
+      icon: <ClockCircleOutlined />,
+      color: 'purple',
+    },
+    in_progress: {
+      label: 'In Progress',
+      icon: <SyncOutlined spin />,
+      color: 'processing',
+    },
+    resolved: {
+      label: 'Resolved',
+      icon: <CheckCircleOutlined />,
+      color: 'success',
+    },
+    cancelled: {
+      label: 'Cancelled',
+      icon: <CloseCircleOutlined />,
+      color: 'error',
+    },
+    open: {
+      label: 'Open',
+      icon: <ClockCircleOutlined />,
+      color: 'purple',
+    },
+  };
 
   // installation request table column
   const columns: TableColumnsType<any> = [
@@ -37,7 +77,15 @@ export const InstallationRequest = () => {
       title: 'Status',
       dataIndex: 'status',
       render: (status: string) => {
-        return <CustomStatusTag status={status} />;
+        const statusDetails = statusMapping[status as StatusType];
+
+        return (
+          <CustomStatusTag
+            label={statusDetails?.label}
+            icon={statusDetails?.icon}
+            color={statusDetails?.color}
+          />
+        );
       },
       filters: [
         {

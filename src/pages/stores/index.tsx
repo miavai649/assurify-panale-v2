@@ -1,11 +1,31 @@
 import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import { TableColumnsType, Tag } from 'antd';
+import { TableColumnsType } from 'antd';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import CustomStatusTag from '../../components/CustomStatusTag';
 import CustomTable from '../../components/Tables/CustomTable';
 import { formatDate } from '../../lib/formatDate';
 import { shopifyStores } from './storesDummyData';
 
+// Define a type for the status mapping keys
+type Status = 'installed' | 'uninstalled';
+
 const Stores = () => {
+  const statusMapping: Record<
+    Status,
+    { label: string; icon: JSX.Element; color: string }
+  > = {
+    installed: {
+      label: 'Installed',
+      icon: <CheckCircleOutlined />,
+      color: 'success',
+    },
+    uninstalled: {
+      label: 'Uninstalled',
+      icon: <CloseCircleOutlined />,
+      color: 'error',
+    },
+  };
+
   // promotions table column
   const columns: TableColumnsType<any> = [
     {
@@ -24,29 +44,23 @@ const Stores = () => {
     {
       title: 'App Status',
       dataIndex: 'appStatus',
-      render: (appStatus: string) => {
-        if (appStatus === 'Installed') {
-          return (
-            <Tag icon={<CheckCircleOutlined />} color="success">
-              Installed
-            </Tag>
-          );
-        } else {
-          return (
-            <Tag icon={<CloseCircleOutlined />} color="error">
-              Uninstalled
-            </Tag>
-          );
-        }
+      render: (appStatus: Status) => {
+        return (
+          <CustomStatusTag
+            label={statusMapping[appStatus]?.label}
+            icon={statusMapping[appStatus]?.icon}
+            color={statusMapping[appStatus]?.color}
+          />
+        );
       },
       filters: [
         {
           text: 'Installed',
-          value: 'Installed',
+          value: 'installed',
         },
         {
           text: 'Uninstalled',
-          value: 'Uninstalled',
+          value: 'uninstalled',
         },
       ],
       onFilter: (value, record) => {

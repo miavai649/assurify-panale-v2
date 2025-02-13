@@ -1,51 +1,22 @@
 import { Tag } from 'antd';
-import {
-  CheckCircleOutlined,
-  ClockCircleOutlined,
-  CloseCircleOutlined,
-  QuestionCircleOutlined,
-  SyncOutlined,
-} from '@ant-design/icons';
+import React from 'react';
 
-const CustomStatusTag = ({ status }: { status: string }) => {
-  switch (status) {
-    case 'pending':
-      return (
-        <Tag icon={<ClockCircleOutlined />} color="purple">
-          Pending
-        </Tag>
-      );
-    case 'in_progress':
-      return (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          In Progress
-        </Tag>
-      );
-    case 'resolved':
-      return (
-        <Tag icon={<CheckCircleOutlined />} color="success">
-          Resolved
-        </Tag>
-      );
-    case 'cancelled':
-      return (
-        <Tag icon={<CloseCircleOutlined />} color="error">
-          Cancelled
-        </Tag>
-      );
-    case 'open':
-      return (
-        <Tag icon={<ClockCircleOutlined />} color="purple">
-          Pending
-        </Tag>
-      );
-    default:
-      return (
-        <Tag icon={<QuestionCircleOutlined />} color="warning">
-          Unknown
-        </Tag>
-      );
-  }
+interface CustomStatusTagProps {
+  label: string; // The label of the status (e.g., 'Installed', 'Uninstalled')
+  icon: React.ReactNode; // The icon to display with the tag (e.g., <CheckCircleOutlined />)
+  color: string; // The color of the tag (e.g., 'success', 'error', 'processing')
+}
+
+const CustomStatusTag: React.FC<CustomStatusTagProps> = ({
+  label,
+  icon,
+  color,
+}) => {
+  return (
+    <Tag icon={icon} color={color}>
+      {label}
+    </Tag>
+  );
 };
 
 export default CustomStatusTag;
