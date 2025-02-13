@@ -25,7 +25,7 @@ function App() {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  if (loading) return <Loader />;
+  if (loading && !userLoggedIn && !token) return <Loader />;
 
   return (
     <Routes>

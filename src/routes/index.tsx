@@ -2,6 +2,7 @@ import Dashboard from '../pages/Dashboard';
 import { InstallationRequest } from '../pages/InstallationReqeust/InstallationRequest';
 import SingleInstallationRequest from '../pages/InstallationReqeust/SingleInstallationRequest';
 import Promotions from '../pages/Promotions';
+import Stores from '../pages/stores';
 import ThemeData from '../pages/ThemeData';
 import SingleThemeData from '../pages/ThemeData/SingleThemeData';
 
@@ -48,5 +49,12 @@ export const assurify_panel_routes = [
     title: 'Promotions',
     pageTitle: 'Theme Data | Assurify Promotions',
     element: <Promotions />,
+  },
+  {
+    navigateLink: 'stores',
+    iconName: 'stores',
+    title: 'Stores',
+    pageTitle: 'Stores | Assurify Stores',
+    element: <Stores />,
   },
 ];
