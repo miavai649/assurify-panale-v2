@@ -1,4 +1,4 @@
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, onIdTokenChanged, User } from 'firebase/auth';
 import {
   createContext,
   ReactNode,
@@ -39,19 +39,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const baseUrl = import.meta.env.VITE_PUBLIC_BASE_URL || '';
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    // listen for auth state changes
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-      if (user) {
-        user.getIdToken().then((token) => {
-          setToken(token);
-        });
-      } else {
-        setToken(null);
-      }
       setUserLoggedIn(!!user);
       setLoading(false);
     });
-    return unsubscribe;
+
+    // listen for token changes and refresh it automatically
+    const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
+      if (user) {
+        const newToken = await user.getIdToken(true);
+        setToken(newToken);
+      } else {
+        setToken(null);
+      }
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeToken();
+    };
   }, []);
 
   const value: AuthContextType = {
