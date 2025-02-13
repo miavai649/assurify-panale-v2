@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ClickOutside from '../ClickOutside';
-import UserOne from '../../images/user/user-01.png';
-import SvgIcon from '../Svg';
 import { doSignOut } from '../../firebase/auth';
-import useJwt from '../../hooks/useJwt';
+import UserOne from '../../images/user/user-01.png';
+import ClickOutside from '../ClickOutside';
+import SvgIcon from '../Svg';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { setJwt } = useJwt();
 
   const handleSignout = () => {
     doSignOut();
-    setJwt(null);
   };
 
   return (

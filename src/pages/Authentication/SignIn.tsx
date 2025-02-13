@@ -1,20 +1,15 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../../images/logo/logo.svg';
+import CustomButton from '../../components/CustomButton';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import {
-  doSignInWithEmailAndPassword,
-  doSignInWithGoogle,
-} from '../../firebase/auth';
-import toast from 'react-hot-toast';
-import CustomButton from '../../components/CustomButton';
-import useJwt from '../../hooks/useJwt';
+import { doSignInWithEmailAndPassword } from '../../firebase/auth';
+import Logo from '../../images/logo/logo.svg';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { setJwt } = useJwt();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,19 +24,19 @@ const SignIn: React.FC = () => {
       );
 
       if (result && result.user) {
-        const response = await fetch(
-          'http://localhost:3000/api/v1/auth/login',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: data.email }),
-          },
-        );
-        const accessToken = await response.json();
-        // await localStorage.setItem('accessToken', accessToken.data);
-        setJwt(accessToken.data);
+        // const response = await fetch(
+        //   'http://localhost:3000/api/v1/auth/login',
+        //   {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({ email: data.email }),
+        //   },
+        // );
+        // const accessToken = await response.json();
+        // // await localStorage.setItem('accessToken', accessToken.data);
+        // setJwt(accessToken.data);
         toast.success('Logged in successfully');
         navigate('/');
         setIsLoading(false);
@@ -56,19 +51,19 @@ const SignIn: React.FC = () => {
   };
 
   // handle google sign in function
-  const handleGoogleSignIn = async () => {
-    try {
-      const result = await doSignInWithGoogle();
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     const result = await doSignInWithGoogle();
 
-      if (typeof result !== 'string' && result?.user) {
-        toast.success('Logged In Successfully');
-        navigate('/');
-      }
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
-      toast.error('Something Went Wrong');
-    }
-  };
+  //     if (typeof result !== 'string' && result?.user) {
+  //       toast.success('Logged In Successfully');
+  //       navigate('/');
+  //     }
+  //   } catch (error) {
+  //     console.error('Google Sign-In Error:', error);
+  //     toast.error('Something Went Wrong');
+  //   }
+  // };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-boxdark-2 text-bodydark">
@@ -125,7 +120,8 @@ const SignIn: React.FC = () => {
               </CustomButton>
             </form>
 
-            <div className="my-5">
+            {/* goggle sign in button */}
+            {/* <div className="my-5">
               <button
                 onClick={handleGoogleSignIn}
                 className="w-full flex items-center justify-center gap-3.5 rounded-lg px-4 py-2 transition border border-strokedark bg-meta-4 hover:bg-opacity-50"
@@ -133,7 +129,7 @@ const SignIn: React.FC = () => {
                 <SvgIcon name="google" />
                 Sign in with Google
               </button>
-            </div>
+            </div> */}
             <div className="mt-6 text-center">
               <p>
                 Don’t have an account?{' '}

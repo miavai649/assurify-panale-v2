@@ -1,11 +1,9 @@
 import {
   createUserWithEmailAndPassword,
-  GoogleAuthProvider,
   signInWithEmailAndPassword,
-  signInWithPopup,
 } from 'firebase/auth';
-import { auth } from './firebase';
 import toast from 'react-hot-toast';
+import { auth } from './firebase';
 
 export const doCreateUserWithEmailAndPassword = async (
   email: string,
@@ -69,13 +67,13 @@ export const doSignInWithEmailAndPassword = async (
   }
 };
 
-export const doSignInWithGoogle = async () => {
-  const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider).catch((error) =>
-    toast.error(error.message),
-  );
-  return result;
-};
+// export const doSignInWithGoogle = async () => {
+//   const provider = new GoogleAuthProvider();
+//   const result = await signInWithPopup(auth, provider).catch((error) =>
+//     toast.error(error.message),
+//   );
+//   return result;
+// };
 
 export const doSignOut = async () => {
   const result = await auth.signOut();

@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import Logo from '../../images/logo/logo.svg';
+import CustomButton from '../../components/CustomButton';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import {
-  doCreateUserWithEmailAndPassword,
-  doSignInWithGoogle,
-} from '../../firebase/auth';
-import toast from 'react-hot-toast';
-import CustomButton from '../../components/CustomButton';
+import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
+import Logo from '../../images/logo/logo.svg';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +16,7 @@ const SignUp: React.FC = () => {
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
+    console.log('👀 ~ handleSubmit ~ data:', data);
 
     try {
       const result = await doCreateUserWithEmailAndPassword(
@@ -41,19 +39,19 @@ const SignUp: React.FC = () => {
   };
 
   // handle google sign up function
-  const handleGoogleSignIn = async () => {
-    try {
-      const result = await doSignInWithGoogle();
+  // const handleGoogleSignIn = async () => {
+  //   try {
+  //     const result = await doSignInWithGoogle();
 
-      if (typeof result !== 'string' && result?.user) {
-        toast.success('Logged In Successfully');
-        navigate('/');
-      }
-    } catch (error) {
-      console.error('Google Sign-In Error:', error);
-      toast.error('Something Went Wrong');
-    }
-  };
+  //     if (typeof result !== 'string' && result?.user) {
+  //       toast.success('Logged In Successfully');
+  //       navigate('/');
+  //     }
+  //   } catch (error) {
+  //     console.error('Google Sign-In Error:', error);
+  //     toast.error('Something Went Wrong');
+  //   }
+  // };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-boxdark-2 text-bodydark">
@@ -121,7 +119,7 @@ const SignUp: React.FC = () => {
               </CustomButton>
             </form>
 
-            <div className="my-5">
+            {/* <div className="my-5">
               <button
                 onClick={handleGoogleSignIn}
                 className="w-full flex items-center justify-center gap-3.5 rounded-lg px-4 py-2 transition border border-strokedark bg-meta-4 hover:bg-opacity-50"
@@ -129,7 +127,7 @@ const SignUp: React.FC = () => {
                 <SvgIcon name="google" />
                 Sign up with Google
               </button>
-            </div>
+            </div> */}
             <div className="mt-6 text-center">
               <p>
                 Already have an account?{' '}

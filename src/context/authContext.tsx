@@ -13,8 +13,7 @@ interface AuthContextType {
   userLoggedIn: boolean;
   loading: boolean;
   baseUrl: string;
-  jwt: string | null;
-  setJwt: (jwt: string | null) => void;
+  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,18 +32,22 @@ export function useAuth(): AuthContextType {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [jwt, setJwt] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const baseUrl = import.meta.env.VITE_PUBLIC_BASE_URL || '';
 
   useEffect(() => {
-    const localJWT = localStorage.getItem('accessToken');
-    setJwt(localJWT || null);
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      if (user) {
+        user.getIdToken().then((token) => {
+          setToken(token);
+        });
+      } else {
+        setToken(null);
+      }
       setUserLoggedIn(!!user);
       setLoading(false);
     });
@@ -56,8 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     userLoggedIn,
     loading,
     baseUrl,
-    jwt,
-    setJwt,
+    token,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import useJwt from './useJwt';
+import { useAuth } from '../context/authContext';
 
 const useAppQuery = () => {
   const [loading, setLoading] = useState(false);
-  const { jwt, setJwt } = useJwt();
+  const { token } = useAuth();
   const baseUrl = import.meta.env.VITE_PUBLIC_BASE_URL || '';
   const fetchQuery = async (url: string, options = {}) => {
     try {
       setLoading(true);
       const headers: any = {};
 
-      if (jwt) {
-        headers.Authorization = `Bearer ${jwt}`;
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
       }
 
       const response = await fetch(baseUrl.concat(url), {
@@ -20,17 +20,12 @@ const useAppQuery = () => {
       });
       const data = await response.json();
 
-      if (data?.token) {
-        setJwt(data.token);
-      }
-
       if (data.error) {
         if (
           data.error.includes('TokenExpiredError') ||
           data.error.includes('JsonWebTokenError')
         ) {
           console.log('Token expired');
-          setJwt('');
         }
       }
       return data;

@@ -1,10 +1,9 @@
 import { useAuth } from '../context/authContext';
 
 const useJwt = () => {
-  const { currentUser, loading, baseUrl, jwt, setJwt } = useAuth();
+  const { currentUser, loading, baseUrl } = useAuth();
 
   const setAndStoreJwt = (jwt: string | null) => {
-    setJwt(jwt);
     if (!jwt) {
       localStorage.removeItem('accessToken');
     } else {
@@ -13,7 +12,6 @@ const useJwt = () => {
   };
 
   return {
-    jwt,
     setJwt: setAndStoreJwt,
     loadingUser: loading,
     user: currentUser,
