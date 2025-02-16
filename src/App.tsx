@@ -20,12 +20,13 @@ import { assurify_panel_routes as panelRoutes } from './routes';
 function App() {
   const { pathname } = useLocation();
   const { userLoggedIn, loading, token } = useAuth();
+  console.log('👀 ~ App ~ userLoggedIn:', { userLoggedIn, loading, token });
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  if (loading && !userLoggedIn && !token) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <Routes>
@@ -50,7 +51,7 @@ function App() {
       />
 
       {/* Protected Routes (Inside DefaultLayout) */}
-      {userLoggedIn && token ? (
+      {userLoggedIn ? (
         <Route
           path="/*"
           element={

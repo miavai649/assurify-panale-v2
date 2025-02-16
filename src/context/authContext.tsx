@@ -48,11 +48,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // listen for token changes and refresh it automatically
     const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
+      setLoading(true);
       if (user) {
         const newToken = await user.getIdToken(true);
         setToken(newToken);
+        setLoading(false);
       } else {
         setToken(null);
+        setLoading(false);
       }
     });
 
