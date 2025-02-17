@@ -6,6 +6,7 @@ import Stores from '../pages/stores';
 import SingleStoreDetailsPage from '../pages/stores/SingleStoreDetailsPage';
 import ThemeData from '../pages/ThemeData';
 import SingleThemeData from '../pages/ThemeData/SingleThemeData';
+import User from '../pages/user';
 
 export const assurify_panel_routes = [
   {
@@ -64,5 +65,12 @@ export const assurify_panel_routes = [
         element: <SingleStoreDetailsPage />,
       },
     ],
+  },
+  {
+    navigateLink: 'user',
+    iconName: 'users',
+    title: 'Users',
+    pageTitle: 'Users Data | Assurify Dashboard Users Data',
+    element: <User />,
   },
 ];
