@@ -13,6 +13,7 @@ import { shopifyStores } from './storesDummyData';
 type Status = 'installed' | 'uninstalled';
 
 const Stores = () => {
+  // stores status mapping options
   const statusMapping: Record<
     Status,
     { label: string; icon: JSX.Element; color: string }
@@ -29,7 +30,7 @@ const Stores = () => {
     },
   };
 
-  // promotions table column
+  // stores table column
   const columns: TableColumnsType<any> = [
     {
       title: 'Id',
@@ -95,7 +96,7 @@ const Stores = () => {
 
   return (
     <div>
-      <Breadcrumb pageName="Installation Request" />
+      <Breadcrumb pageName="Stores" />
 
       <CustomTable columns={columns} tableSize="large" data={shopifyStores} />
     </div>
