@@ -1,7 +1,9 @@
 import { TableColumnsType } from 'antd';
 import { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
+import CustomInputField from '../../components/form/CustomInputField';
 import SelectBox from '../../components/SelectBox';
 import CustomTable from '../../components/Tables/CustomTable';
 import { formatDate } from '../../lib/formatDate';
@@ -12,6 +14,7 @@ type Role = 'admin' | 'super_admin' | 'member';
 const User = () => {
   // local state
   const [role, setRole] = useState('');
+  console.log('👀 ~ User ~ role:', role);
 
   const options = [
     { value: 'member', label: 'Member' },
@@ -87,7 +90,7 @@ const User = () => {
       title: 'Actions',
       dataIndex: 'key',
       key: 'view',
-      render: (key) => (
+      render: () => (
         <SelectBox
           options={options}
           // defaultValue={options.find(
@@ -101,7 +104,26 @@ const User = () => {
   ];
   return (
     <div>
-      <Breadcrumb pageName="Stores" />
+      <Breadcrumb pageName="Users" />
+
+      {/* sending invitation for new user  */}
+      <div className="mb-6 h-full grid grid-cols-12 gap-4 items-center justify-center">
+        <CustomInputField
+          className="col-span-10 mb-2 "
+          placeholder="Email"
+          size="md"
+          // onChange={(e) => setCount(e.target.value)}
+          type="email"
+        />
+        <CustomButton
+          size="md"
+          // onClick={generateKeys}
+          // isLoading={isPending}
+          className="col-span-2 "
+        >
+          Send Invite
+        </CustomButton>
+      </div>
 
       <CustomTable columns={columns} tableSize="large" data={userDummyData} />
     </div>
