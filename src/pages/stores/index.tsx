@@ -6,29 +6,17 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import CustomButton from '../../components/CustomButton';
 import CustomStatusTag from '../../components/CustomStatusTag';
 import CustomTable from '../../components/Tables/CustomTable';
+import useQuery from '../../hooks/useQuery';
 import { formatDate } from '../../lib/formatDate';
-import { shopifyStores } from './storesDummyData';
 
 // Define a type for the status mapping keys
 type Status = 'installed' | 'uninstalled';
 
 const Stores = () => {
-  // stores status mapping options
-  const statusMapping: Record<
-    Status,
-    { label: string; icon: JSX.Element; color: string }
-  > = {
-    installed: {
-      label: 'Installed',
-      icon: <CheckCircleOutlined />,
-      color: 'success',
-    },
-    uninstalled: {
-      label: 'Uninstalled',
-      icon: <CloseCircleOutlined />,
-      color: 'error',
-    },
-  };
+  // query and mutation
+  const { data: stores, isLoading } = useQuery<any[]>(
+    '/api/admin/stores/get-all',
+  ); // get all stores
 
   // stores table column
   const columns: TableColumnsType<any> = [
@@ -38,12 +26,17 @@ const Stores = () => {
       sorter: (a, b) => a.id - b.id,
     },
     {
-      title: 'Store Name',
-      dataIndex: 'storeName',
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
     },
     {
       title: 'Current Plan',
       dataIndex: 'currentPlan',
+      render: (currentPlan: string) => currentPlan || 'Free Plan',
     },
     {
       title: 'App Status',
@@ -51,9 +44,9 @@ const Stores = () => {
       render: (appStatus: Status) => {
         return (
           <CustomStatusTag
-            label={statusMapping[appStatus]?.label}
-            icon={statusMapping[appStatus]?.icon}
-            color={statusMapping[appStatus]?.color}
+            label={appStatus ? 'Uninstalled' : 'Installed'}
+            icon={appStatus ? <CloseCircleOutlined /> : <CheckCircleOutlined />}
+            color={appStatus ? 'error' : 'success'}
           />
         );
       },
@@ -80,7 +73,7 @@ const Stores = () => {
       title: 'Actions',
       dataIndex: 'key',
       key: 'view',
-      render: (key) => (
+      render: () => (
         <NavLink to={`/stores/view/1`}>
           <CustomButton
             icon={<Eye className="w-4 h-4" />}
@@ -94,11 +87,30 @@ const Stores = () => {
     },
   ];
 
+  // configuring data for showing in the table
+  const tableData =
+    stores?.map((store: any) => {
+      return {
+        key: store?.id,
+        id: store?.id,
+        name: store?.owner_name,
+        email: store?.email,
+        currentPlan: store?.active_plan,
+        appStatus: store?.uninstalled,
+        installedAt: store?.created_at,
+      };
+    }) || [];
+
   return (
     <div>
       <Breadcrumb pageName="Stores" />
 
-      <CustomTable columns={columns} tableSize="large" data={shopifyStores} />
+      <CustomTable
+        columns={columns}
+        tableSize="large"
+        data={tableData}
+        loading={isLoading}
+      />
     </div>
   );
 };
