@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { doSignOut } from '../../firebase/auth';
 import UserOne from '../../images/user/user-01.png';
 import ClickOutside from '../ClickOutside';
 import SvgIcon from '../Svg';
+import { useAuth } from '../../context/authContext';
+import toast from 'react-hot-toast';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const { setJwt } = useAuth();
+
   const handleSignout = () => {
-    doSignOut();
+    toast.success('Logged out successfully');
+    setJwt(null);
   };
 
   return (
