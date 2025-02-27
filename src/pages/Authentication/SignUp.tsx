@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomButton from '../../components/CustomButton';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import Logo from '../../images/logo/logo.svg';
 import useAppQuery from '../../hooks/useAppQuery';
+import Logo from '../../images/logo/logo.svg';
 
 const SignUp: React.FC = () => {
   const { fetchQuery, loading } = useAppQuery();
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,6 +23,10 @@ const SignUp: React.FC = () => {
       .then((response) => {
         if (response.error) {
           toast.error(response.error);
+        } else {
+          // e.currentTarget.reset();
+          navigate('/');
+          toast.success('Account created successfully');
         }
       })
       .catch((error) => {

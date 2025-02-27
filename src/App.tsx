@@ -19,14 +19,13 @@ import { assurify_panel_routes as panelRoutes } from './routes';
 
 function App() {
   const { pathname } = useLocation();
-  const { userLoggedIn, loading, token } = useAuth();
-  console.log('👀 ~ App ~ userLoggedIn:', { userLoggedIn, loading, token });
+  const { jwt, loadingUser } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  if (loading) return <Loader />;
+  if (loadingUser) return <Loader />;
 
   return (
     <Routes>
@@ -51,7 +50,7 @@ function App() {
       />
 
       {/* Protected Routes (Inside DefaultLayout) */}
-      {userLoggedIn ? (
+      {jwt ? (
         <Route
           path="/*"
           element={
