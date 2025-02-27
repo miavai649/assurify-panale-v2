@@ -24,7 +24,6 @@ const SignUp: React.FC = () => {
         if (response.error) {
           toast.error(response.error);
         } else {
-          // e.currentTarget.reset();
           navigate('/');
           toast.success('Account created successfully');
         }

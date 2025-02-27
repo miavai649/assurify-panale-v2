@@ -4,66 +4,34 @@ import { Link, useNavigate } from 'react-router-dom';
 import CustomButton from '../../components/CustomButton';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import { doSignInWithEmailAndPassword } from '../../firebase/auth';
 import Logo from '../../images/logo/logo.svg';
+import useAppQuery from '../../hooks/useAppQuery';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+
+  const { fetchQuery, loading } = useAppQuery();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
 
-    try {
-      const result = await doSignInWithEmailAndPassword(
-        data.email as string,
-        data.password as string,
-      );
-
-      if (result && result.user) {
-        // const response = await fetch(
-        //   'http://localhost:3000/api/v1/auth/login',
-        //   {
-        //     method: 'POST',
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ email: data.email }),
-        //   },
-        // );
-        // const accessToken = await response.json();
-        // // await localStorage.setItem('accessToken', accessToken.data);
-        // setJwt(accessToken.data);
-        toast.success('Logged in successfully');
-        navigate('/');
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-      toast.error('Something went wrong.');
-    }
+    fetchQuery('/api/admin/login', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          navigate('/');
+          toast.success('Logged in successfully');
+        }
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
   };
-
-  // handle google sign in function
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     const result = await doSignInWithGoogle();
-
-  //     if (typeof result !== 'string' && result?.user) {
-  //       toast.success('Logged In Successfully');
-  //       navigate('/');
-  //     }
-  //   } catch (error) {
-  //     console.error('Google Sign-In Error:', error);
-  //     toast.error('Something Went Wrong');
-  //   }
-  // };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-boxdark-2 text-bodydark">
@@ -113,7 +81,7 @@ const SignIn: React.FC = () => {
                 type="submit"
                 variant="primary"
                 size="md"
-                isLoading={isLoading}
+                isLoading={loading}
                 className="mt-4 w-full"
               >
                 Sign In

@@ -3,7 +3,7 @@ import { useAuth } from '../context/authContext';
 const useJwt = () => {
   const { jwt, setJwt, loadingUser, user, baseUrl } = useAuth();
 
-  const setAndStoreJwt = (jwt: string) => {
+  const setAndStoreJwt = (jwt: any) => {
     setJwt(jwt);
     if (!jwt) {
       localStorage.removeItem('jwt');

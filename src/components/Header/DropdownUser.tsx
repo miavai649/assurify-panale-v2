@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import UserOne from '../../images/user/user-01.png';
 import ClickOutside from '../ClickOutside';
 import SvgIcon from '../Svg';
-import { useAuth } from '../../context/authContext';
-import toast from 'react-hot-toast';
+import useJwt from '../../hooks/useJwt';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const { setJwt } = useAuth();
+  const { setJwt } = useJwt();
 
   const handleSignout = () => {
     toast.success('Logged out successfully');
