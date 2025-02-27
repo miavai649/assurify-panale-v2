@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomButton from '../../components/CustomButton';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import Logo from '../../images/logo/logo.svg';
 import useAppQuery from '../../hooks/useAppQuery';
+import Logo from '../../images/logo/logo.svg';
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
