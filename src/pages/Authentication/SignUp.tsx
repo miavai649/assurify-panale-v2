@@ -4,54 +4,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import CustomButton from '../../components/CustomButton';
 import SvgIcon from '../../components/Svg';
 import CustomInputField from '../../components/form/CustomInputField';
-import { doCreateUserWithEmailAndPassword } from '../../firebase/auth';
 import Logo from '../../images/logo/logo.svg';
+import useAppQuery from '../../hooks/useAppQuery';
 
 const SignUp: React.FC = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const { fetchQuery, loading } = useAppQuery();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
-    console.log('👀 ~ handleSubmit ~ data:', data);
 
-    try {
-      const result = await doCreateUserWithEmailAndPassword(
-        data.email as string,
-        data.password as string,
-      );
-
-      if (result && result.user) {
-        toast.success('Account created successfully, Please log in now');
-        navigate('/auth/signin');
-        setIsLoading(false);
-      } else {
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error('error', error);
-      toast.error('Something went wrong.');
-    }
+    fetchQuery('/api/admin/register', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        if (response.error) {
+          toast.error(response.error);
+        }
+      })
+      .catch((error) => {
+        console.log({ error });
+      });
   };
-
-  // handle google sign up function
-  // const handleGoogleSignIn = async () => {
-  //   try {
-  //     const result = await doSignInWithGoogle();
-
-  //     if (typeof result !== 'string' && result?.user) {
-  //       toast.success('Logged In Successfully');
-  //       navigate('/');
-  //     }
-  //   } catch (error) {
-  //     console.error('Google Sign-In Error:', error);
-  //     toast.error('Something Went Wrong');
-  //   }
-  // };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-boxdark-2 text-bodydark">
@@ -112,7 +87,7 @@ const SignUp: React.FC = () => {
                 type="submit"
                 variant="primary"
                 size="md"
-                isLoading={isLoading}
+                isLoading={loading}
                 className="mt-4 w-full"
               >
                 Sign Up

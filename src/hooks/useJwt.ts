@@ -1,22 +1,18 @@
 import { useAuth } from '../context/authContext';
 
 const useJwt = () => {
-  const { currentUser, loading, baseUrl } = useAuth();
+  const { jwt, setJwt, loadingUser, user, baseUrl } = useAuth();
 
-  const setAndStoreJwt = (jwt: string | null) => {
+  const setAndStoreJwt = (jwt: string) => {
+    setJwt(jwt);
     if (!jwt) {
-      localStorage.removeItem('accessToken');
+      localStorage.removeItem('jwt');
     } else {
-      localStorage.setItem('accessToken', jwt);
+      localStorage.setItem('jwt', jwt);
     }
   };
 
-  return {
-    setJwt: setAndStoreJwt,
-    loadingUser: loading,
-    user: currentUser,
-    baseUrl,
-  };
+  return { jwt, setJwt: setAndStoreJwt, loadingUser, user, baseUrl };
 };
 
 export default useJwt;

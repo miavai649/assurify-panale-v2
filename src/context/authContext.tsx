@@ -1,4 +1,3 @@
-import { onAuthStateChanged, onIdTokenChanged, User } from 'firebase/auth';
 import {
   createContext,
   ReactNode,
@@ -6,14 +5,13 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { auth } from '../firebase/firebase';
 
 interface AuthContextType {
-  currentUser: User | null;
-  userLoggedIn: boolean;
-  loading: boolean;
+  jwt: string | null;
+  setJwt: (jwt: string | null) => void;
+  loadingUser: boolean;
+  user: any;
   baseUrl: string;
-  token: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,46 +29,37 @@ export function useAuth(): AuthContextType {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [jwt, setJwt] = useState<string | null>(null);
+  const [user, setUser] = useState(null);
 
   const baseUrl = import.meta.env.VITE_PUBLIC_BASE_URL || '';
 
   useEffect(() => {
-    // listen for auth state changes
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setUserLoggedIn(!!user);
-      setLoading(false);
-    });
+    const localJWT = localStorage.getItem('jwt');
+    setJwt(localJWT || null);
+    fetch(baseUrl.concat('/api/admin/get-user'), {
+      headers: {
+        Authorization: `Bearer ${localJWT}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-    // listen for token changes and refresh it automatically
-    const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
-      setLoading(true);
-      if (user) {
-        const newToken = await user.getIdToken(true);
-        setToken(newToken);
-        setLoading(false);
-      } else {
-        setToken(null);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      unsubscribeAuth();
-      unsubscribeToken();
-    };
-  }, []);
+    setLoadingUser(false);
+  }, [baseUrl]);
 
   const value: AuthContextType = {
-    currentUser,
-    userLoggedIn,
-    loading,
+    jwt,
+    setJwt,
+    loadingUser,
+    user,
     baseUrl,
-    token,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
