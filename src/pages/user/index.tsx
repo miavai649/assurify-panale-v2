@@ -7,7 +7,7 @@ import CustomInputField from '../../components/form/CustomInputField';
 import SelectBox from '../../components/SelectBox';
 import CustomTable from '../../components/Tables/CustomTable';
 import { formatDate } from '../../lib/formatDate';
-import { userDummyData } from './userDummyData';
+import useQuery from '../../hooks/useQuery';
 
 type Role = 'admin' | 'super_admin' | 'member';
 
@@ -15,6 +15,11 @@ const User = () => {
   // local state
   const [role, setRole] = useState('');
   console.log('👀 ~ User ~ role:', role);
+
+  const { data: usersData, isLoading } = useQuery<any[]>(
+    '/api/admin/users/get-all',
+  );
+  console.log('👀 ~ User ~ usersData:', usersData);
 
   const options = [
     { value: 'member', label: 'Member' },
@@ -102,6 +107,20 @@ const User = () => {
       ),
     },
   ];
+
+  // configuring data for showing in the table
+  const tableData =
+    usersData?.map((user: any) => {
+      return {
+        key: user?.id,
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        role: user?.role,
+        createdAt: user?.createdAt,
+      };
+    }) || [];
+
   return (
     <div>
       <Breadcrumb pageName="Users" />
@@ -125,7 +144,12 @@ const User = () => {
         </CustomButton>
       </div>
 
-      <CustomTable columns={columns} tableSize="large" data={userDummyData} />
+      <CustomTable
+        loading={isLoading}
+        columns={columns}
+        tableSize="large"
+        data={tableData}
+      />
     </div>
   );
 };
