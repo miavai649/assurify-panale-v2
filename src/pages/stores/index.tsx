@@ -73,8 +73,8 @@ const Stores = () => {
       title: 'Actions',
       dataIndex: 'key',
       key: 'view',
-      render: () => (
-        <NavLink to={`/stores/view/1`}>
+      render: (key) => (
+        <NavLink to={`/stores/view/${key}`}>
           <CustomButton
             icon={<Eye className="w-4 h-4" />}
             aria-label="View"

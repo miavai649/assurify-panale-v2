@@ -1,12 +1,63 @@
-import { CheckCircleOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
-import { useParams } from 'react-router-dom';
+import { ReactElement } from 'react';
+import { json, useParams } from 'react-router-dom';
+import Loader from '../../common/Loader';
 import CardDataStats from '../../components/CardDataStats';
-import CustomStatusTag from '../../components/CustomStatusTag';
+import useQuery from '../../hooks/useQuery';
+import { formatDate } from '../../lib/formatDate';
+import OnboardStepsCard from './OnboardStepsCard';
+
+interface StoreData {
+  id: number;
+  onboard_steps: string | null;
+  url: string;
+  owner_name: string;
+  active_plan: string | null;
+  created_at: string;
+  email: string;
+  products: {
+    id: number | null;
+    storeId: number | null;
+    productId: string | null;
+    title: string | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+    store_id: number | null;
+  };
+  configs: {
+    id: number | null;
+    storeId: string | null;
+    key: string | null;
+    value: string | null;
+    json: any | null;
+    createdAt: string | null;
+    updatedAt: string | null;
+    store_id: string | null;
+  };
+  lifetimeClaimCount: number;
+  lifetimeSpent: number;
+  currentMonthClaimCount: number;
+  currentMonthSpent: number;
+}
 
 const SingleStoreDetailsPage = () => {
   const { id } = useParams();
-  console.log('👀 ~ SingleStoreDetailsPage ~ id:', id);
+
+  // query and mutation
+  const {
+    data: singleStore,
+    isLoading,
+    isFetched,
+    refetch, // Add refetch from useQuery
+  } = useQuery<StoreData>(`/api/admin/stores/${id}`);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  const onboardStepsObject = singleStore?.onboard_steps
+    ? JSON.parse(singleStore.onboard_steps)
+    : null;
 
   return (
     <div>
@@ -14,7 +65,7 @@ const SingleStoreDetailsPage = () => {
         {/* life time claim collection card */}
         <CardDataStats
           title="Life Time Claim Collection"
-          total="152"
+          total={singleStore?.lifetimeClaimCount?.toString() || '0'}
           // rate="24 new since last visit"
           // levelUp
         >
@@ -44,9 +95,9 @@ const SingleStoreDetailsPage = () => {
         {/* life time spent */}
         <CardDataStats
           title="Life Time Spent"
-          total="$2,100"
-          rate="52%"
-          levelUp
+          total={singleStore?.lifetimeSpent?.toString() || '0'}
+          // rate="52%"
+          // levelUp
         >
           <svg
             className="fill-primary dark:fill-white"
@@ -63,7 +114,7 @@ const SingleStoreDetailsPage = () => {
         {/* current month claim collection card */}
         <CardDataStats
           title="Current Month Claim Collection"
-          total="28441"
+          total={singleStore?.currentMonthClaimCount?.toString() || '0'}
           // rate="520 newly registered"
           // levelUp
         >
@@ -86,9 +137,9 @@ const SingleStoreDetailsPage = () => {
         {/* current month spent */}
         <CardDataStats
           title="Current Month Spent"
-          total="$2,100"
-          rate="52%"
-          levelUp
+          total={singleStore?.currentMonthSpent?.toString() || '0'}
+          // rate="52%"
+          // levelUp
         >
           <svg
             className="fill-primary dark:fill-white"
@@ -103,7 +154,7 @@ const SingleStoreDetailsPage = () => {
         </CardDataStats>
       </div>
 
-      <div className="flex-col items-center   p-4 mt-7">
+      <div className="flex flex-col items-center p-4 mt-7">
         <Card
           className="w-full max-w-2xl p-6 shadow-lg rounded-lg bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 mx-auto"
           title={
@@ -113,65 +164,123 @@ const SingleStoreDetailsPage = () => {
           }
         >
           <div className="grid gap-4">
+            {/* Store ID */}
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-gray-600 dark:text-gray-300">
+                Store ID:
+              </span>
+              <span className="text-gray-800 dark:text-gray-200">
+                {singleStore?.id}
+              </span>
+            </div>
+
+            {/* Store URL */}
             <div className="flex items-center justify-between">
               <span className="font-bold text-gray-600 dark:text-gray-300">
                 Store:
               </span>
               <a
-                // href={`https://${singleSupportRequestData?.store?.url}`}
+                href={singleStore?.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 hover:underline"
               >
-                https://developer.mozilla.org
+                {singleStore?.url}
               </a>
             </div>
 
+            {/* Owner Name */}
             <div className="flex items-center justify-between">
               <span className="font-bold text-gray-600 dark:text-gray-300">
-                Theme:
-              </span>
-              <span className="text-gray-800 dark:text-gray-200">Dark</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-gray-600 dark:text-gray-300">
-                Current Plan:
+                Owner:
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                Shopify Plus
+                {singleStore?.owner_name || 'N/A'}
               </span>
             </div>
 
+            {/* Email */}
             <div className="flex items-center justify-between">
               <span className="font-bold text-gray-600 dark:text-gray-300">
                 Email:
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                admin@admin.com
+                {singleStore?.email}
               </span>
             </div>
 
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-gray-600 dark:text-gray-300">
-                Status:
-              </span>
-              <CustomStatusTag
-                label={'Installed'}
-                icon={<CheckCircleOutlined />}
-                color={'success'}
-              />
-            </div>
-
+            {/* Installed At */}
             <div className="flex items-center justify-between">
               <span className="font-bold text-gray-600 dark:text-gray-300">
                 Installed At:
               </span>
               <span className="text-gray-800 dark:text-gray-200">
-                06/15/2023
+                {singleStore?.created_at
+                  ? formatDate(singleStore.created_at)
+                  : 'N/A'}
               </span>
+            </div>
+
+            {/* Products */}
+            <div className="flex items-start justify-between">
+              <span className="font-bold text-gray-600 dark:text-gray-300">
+                Products:
+              </span>
+              <div className="text-gray-800 dark:text-gray-200 text-right">
+                {singleStore?.products?.title ? (
+                  <span>{singleStore.products.title}</span>
+                ) : (
+                  <span className="italic text-gray-500 dark:text-gray-400">
+                    No products linked
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Configs */}
+            <div className="flex items-start justify-between flex-wrap gap-4">
+              <span className="font-bold text-gray-600 dark:text-gray-300 whitespace-nowrap">
+                Configs:
+              </span>
+              <div className="text-gray-800 dark:text-gray-200 text-right max-w-md">
+                {singleStore?.configs?.key ? (
+                  <div className="text-sm">
+                    <span className="font-semibold">
+                      {singleStore.configs.key}:
+                    </span>
+                    <pre className="mt-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-md text-left text-xs whitespace-pre-wrap break-words">
+                      {singleStore?.configs?.value
+                        ? singleStore.configs.value
+                            .split(';')
+                            .filter(Boolean)
+                            .map((prop) => prop.trim())
+                            .join(';\n')
+                        : 'N/A'}
+                    </pre>
+                    <span className="block mt-1 text-gray-500 dark:text-gray-400">
+                      Updated:{' '}
+                      {singleStore.configs.updatedAt
+                        ? formatDate(singleStore.configs.updatedAt)
+                        : 'N/A'}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="italic text-gray-500 dark:text-gray-400">
+                    No configs set
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </Card>
+
+        {singleStore?.onboard_steps && (
+          <OnboardStepsCard
+            storeId={singleStore?.id!!}
+            onboardSteps={JSON.parse(singleStore?.onboard_steps)}
+            onUpdateSuccess={refetch}
+          />
+        )}
       </div>
     </div>
   );
