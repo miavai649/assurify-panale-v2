@@ -1,7 +1,8 @@
-import { Button, Card, Select, message } from 'antd';
+import { Card, Select } from 'antd';
 import { useState, ReactElement } from 'react';
 import useMutation from '../../hooks/useMutation';
 import toast from 'react-hot-toast';
+import CustomButton from '../../components/CustomButton';
 
 const { Option } = Select;
 
@@ -280,16 +281,21 @@ const OnboardStepsCard = ({
         </h2>
       }
       extra={
-        <Button type="primary" onClick={handleToggleEdit}>
+        <CustomButton variant="primary" size="sm" onClick={handleToggleEdit}>
           {isEditing ? 'Cancel' : 'Edit'}
-        </Button>
+        </CustomButton>
       }
     >
       {renderOnboardSteps(formState)}
       {isEditing && (
-        <Button type="primary" className="mt-4" onClick={handleUpdate}>
+        <CustomButton
+          variant="primary"
+          size="md"
+          onClick={handleUpdate}
+          className="mt-4"
+        >
           Save Changes
-        </Button>
+        </CustomButton>
       )}
     </Card>
   );

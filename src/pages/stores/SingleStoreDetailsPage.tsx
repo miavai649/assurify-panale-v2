@@ -1,15 +1,15 @@
 import { Card } from 'antd';
-import { ReactElement } from 'react';
-import { json, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Loader from '../../common/Loader';
 import CardDataStats from '../../components/CardDataStats';
 import useQuery from '../../hooks/useQuery';
 import { formatDate } from '../../lib/formatDate';
 import OnboardStepsCard from './OnboardStepsCard';
+import ConfigsCard from './ConfigsCard';
 
 interface StoreData {
   id: number;
-  onboard_steps: string | null;
+  onboard_steps: string | null | undefined;
   url: string;
   owner_name: string;
   active_plan: string | null;
@@ -27,8 +27,8 @@ interface StoreData {
   configs: {
     id: number | null;
     storeId: string | null;
-    key: string | null;
-    value: string | null;
+    key: string; // Always "custom_css"
+    value: string; // Always present, defaults to ""
     json: any | null;
     createdAt: string | null;
     updatedAt: string | null;
@@ -47,17 +47,12 @@ const SingleStoreDetailsPage = () => {
   const {
     data: singleStore,
     isLoading,
-    isFetched,
     refetch, // Add refetch from useQuery
   } = useQuery<StoreData>(`/api/admin/stores/${id}`);
 
   if (isLoading) {
     return <Loader />;
   }
-
-  const onboardStepsObject = singleStore?.onboard_steps
-    ? JSON.parse(singleStore.onboard_steps)
-    : null;
 
   return (
     <div>
@@ -236,48 +231,23 @@ const SingleStoreDetailsPage = () => {
                 )}
               </div>
             </div>
-
-            {/* Configs */}
-            <div className="flex items-start justify-between flex-wrap gap-4">
-              <span className="font-bold text-gray-600 dark:text-gray-300 whitespace-nowrap">
-                Configs:
-              </span>
-              <div className="text-gray-800 dark:text-gray-200 text-right max-w-md">
-                {singleStore?.configs?.key ? (
-                  <div className="text-sm">
-                    <span className="font-semibold">
-                      {singleStore.configs.key}:
-                    </span>
-                    <pre className="mt-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-md text-left text-xs whitespace-pre-wrap break-words">
-                      {singleStore?.configs?.value
-                        ? singleStore.configs.value
-                            .split(';')
-                            .filter(Boolean)
-                            .map((prop) => prop.trim())
-                            .join(';\n')
-                        : 'N/A'}
-                    </pre>
-                    <span className="block mt-1 text-gray-500 dark:text-gray-400">
-                      Updated:{' '}
-                      {singleStore.configs.updatedAt
-                        ? formatDate(singleStore.configs.updatedAt)
-                        : 'N/A'}
-                    </span>
-                  </div>
-                ) : (
-                  <span className="italic text-gray-500 dark:text-gray-400">
-                    No configs set
-                  </span>
-                )}
-              </div>
-            </div>
           </div>
         </Card>
 
+        {/* Onboard Steps Card */}
         {singleStore?.onboard_steps && (
           <OnboardStepsCard
             storeId={singleStore?.id!!}
             onboardSteps={JSON.parse(singleStore?.onboard_steps)}
+            onUpdateSuccess={refetch}
+          />
+        )}
+
+        {/* Configs Card */}
+        {singleStore?.configs && (
+          <ConfigsCard
+            storeId={singleStore.id}
+            configs={singleStore.configs}
             onUpdateSuccess={refetch}
           />
         )}
