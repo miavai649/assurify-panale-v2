@@ -59,6 +59,7 @@ const SingleStoreDetailsPage = () => {
 
   return (
     <div>
+      {/* claim count and spent amount for single store */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
         {/* life time claim collection card */}
         <CardDataStats
@@ -152,9 +153,11 @@ const SingleStoreDetailsPage = () => {
         </CardDataStats>
       </div>
 
-      <div className="flex flex-col items-center p-4 mt-7">
+      {/* store details */}
+      <div className="container mx-auto p-4 mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Store Info Card */}
         <Card
-          className="w-full max-w-2xl p-6 shadow-lg rounded-lg bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 mx-auto"
+          className="w-full p-6 shadow-lg rounded-lg bg-white dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700"
           title={
             <h2 className="text-xl font-bold text-gray-800 dark:text-white">
               Store Info
@@ -218,29 +221,13 @@ const SingleStoreDetailsPage = () => {
                   : 'N/A'}
               </span>
             </div>
-
-            {/* Products */}
-            <div className="flex items-start justify-between">
-              <span className="font-bold text-gray-600 dark:text-gray-300">
-                Products:
-              </span>
-              <div className="text-gray-800 dark:text-gray-200 text-right">
-                {singleStore?.products?.title ? (
-                  <span>{singleStore.products.title}</span>
-                ) : (
-                  <span className="italic text-gray-500 dark:text-gray-400">
-                    No products linked
-                  </span>
-                )}
-              </div>
-            </div>
           </div>
         </Card>
 
         {/* Onboard Steps Card */}
         {singleStore?.onboard_steps && (
           <OnboardStepsCard
-            storeId={singleStore?.id!!}
+            storeId={singleStore?.id ?? 0}
             onboardSteps={JSON.parse(singleStore?.onboard_steps)}
             onUpdateSuccess={refetch}
           />
@@ -257,7 +244,7 @@ const SingleStoreDetailsPage = () => {
 
         {/* Product Card */}
         <ProductCard
-          storeId={singleStore?.id ?? 0} // Fallback if needed
+          storeId={singleStore?.id ?? 0}
           product={singleStore?.products}
           onUpdateSuccess={refetch}
         />
