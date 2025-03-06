@@ -6,6 +6,7 @@ import useQuery from '../../hooks/useQuery';
 import { formatDate } from '../../lib/formatDate';
 import OnboardStepsCard from './OnboardStepsCard';
 import ConfigsCard from './ConfigsCard';
+import ProductCard from './ProductCard';
 
 interface StoreData {
   id: number;
@@ -53,6 +54,8 @@ const SingleStoreDetailsPage = () => {
   if (isLoading) {
     return <Loader />;
   }
+
+  console.log(singleStore?.products);
 
   return (
     <div>
@@ -251,6 +254,13 @@ const SingleStoreDetailsPage = () => {
             onUpdateSuccess={refetch}
           />
         )}
+
+        {/* Product Card */}
+        <ProductCard
+          storeId={singleStore?.id ?? 0} // Fallback if needed
+          product={singleStore?.products}
+          onUpdateSuccess={refetch}
+        />
       </div>
     </div>
   );
